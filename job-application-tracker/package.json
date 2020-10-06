@@ -6,9 +6,29 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
+    "concurrently": "^5.2.0",
+    "cors": "^2.8.5",
+    "del": "^5.1.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.5",
+    "mongodb-client-encryption": "^1.0.1",
+    "pdfkit": "^0.11.0",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-circular-progressbar": "^2.0.3",
+    "react-counter-input": "^0.2.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-forecast": "0.0.7",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.3",
+    "reactstrap": "^8.4.1",
+    "shards-react": "^1.0.3",
+    "victory": "^34.3.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -30,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "prettier": "2.0.4"
   }
 }
