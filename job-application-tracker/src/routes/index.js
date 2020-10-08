@@ -1,7 +1,7 @@
-const newJob = require("./newJobRoute");
+const user = require("./userRoute");
 
 const constructorMethod = (app) => {
-  app.use("/api/newjob", newJob);
+  app.use("/api/user", user);
 
   app.use("*", (req, res) => {
     res.status(404).json({ error: "Not found" });
