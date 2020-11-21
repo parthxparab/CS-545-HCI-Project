@@ -28,7 +28,7 @@ function Homepage(props) {
   return (
     <div>
       <Grid container spacing={2}>
-        {statuses.map((s) => {
+        {statuses.map((s,idx) => {
           return (
             <Grid
               item
@@ -39,6 +39,7 @@ function Homepage(props) {
                 padding: "6px",
                 backgroundColor: "#f8f8f8",
               }}
+              key = {idx}
             >
               <AppliedComponent status={s.status} getData={setJobData} />
             </Grid>
