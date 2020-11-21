@@ -302,5 +302,15 @@ export default function JobCard(props) {
     );
   });
 
-  return <div>{jobs.length > 0 ? <ul>{displayJobs}</ul> : null}</div>;
+  return (
+    <div>
+      {
+        jobs.length > 0 
+        ? <ul>
+            {displayJobs}
+          </ul> 
+        : null
+      }
+    </div>
+  );
 }
