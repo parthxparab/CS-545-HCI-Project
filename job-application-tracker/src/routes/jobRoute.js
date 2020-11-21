@@ -22,15 +22,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/newjob", async (req, res) => {
+router.post("/", async (req, res) => {
   let jobInfo = req.body;
   if (!jobInfo) {
     res.status(400).json({ error: "You must provide data to create a user" });
     return;
   }
 
-  if (!jobInfo.CompanyName) {
-    res.status(400).json({ error: "You must provide CompanyName" });
+  if (!jobInfo.companyName) {
+    res.status(400).json({ error: "You must provide companyName" });
     return;
   }
 
@@ -44,10 +44,16 @@ router.post("/newjob", async (req, res) => {
     return;
   }
 
-  if (!jobInfo.appLink) {
-    res.status(400).json({ error: "You must provide appLink" });
+  if (!jobInfo.description) {
+    res.status(400).json({ error: "You must provide description" });
     return;
   }
+  //  handle app link later - parth
+
+  // if (!jobInfo.appLink) {
+  //   res.status(400).json({ error: "You must provide appLink" });
+  //   return;
+  // }
 
   if (!jobInfo.status) {
     res.status(400).json({ error: "You must provide status" });
@@ -63,9 +69,10 @@ router.post("/newjob", async (req, res) => {
 
   try {
     const newJob = await jobMethods.newJob(
-      jobInfo.CompanyName,
+      jobInfo.companyName,
       jobInfo.jobTitle,
       jobInfo.timeStamp,
+      jobInfo.description,
       jobInfo.appLink,
       jobInfo.status,
       notes
@@ -79,8 +86,8 @@ router.post("/newjob", async (req, res) => {
 router.patch("/:id", async (req, res) => {
   const updatedJob = req.body;
 
-  if (!updatedJob.CompanyName) {
-    updatedJob.CompanyName = undefined;
+  if (!updatedJob.companyName) {
+    updatedJob.companyName = undefined;
   }
 
   if (!updatedJob.jobTitle) {
@@ -103,7 +110,7 @@ router.patch("/:id", async (req, res) => {
   try {
     const updatedData = await jobMethods.patchUpdate(
       req.params.id,
-      updatedJob.CompanyName,
+      updatedJob.companyName,
       updatedJob.jobTitle,
       updatedJob.appLink,
       updatedJob.status
