@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 const mongoCollections = require("./db/mongoCollections");
 const jobdb = mongoCollections.jobs;
 const ObjectId = require("mongodb").ObjectId;
@@ -22,22 +23,28 @@ async function getAllJobs() {
 }
 
 async function newJob(
-  CompanyName,
+  companyName,
   jobTitle,
   timeStamp,
-  appLink,
-  status = "Applied",
+  description,
+  appLink = "www.google.com",
+  status = "NA",
   notes = ""
 ) {
-  if (!CompanyName || CompanyName === "" || CompanyName === null)
+  if (!companyName || companyName === "" || companyName === null)
     throw "You must provide a Company Name for your entry";
-  if (typeof CompanyName !== "string" || typeof CompanyName == "undefined")
+  if (typeof companyName !== "string" || typeof companyName == "undefined")
     throw "Type of Company Name input must be String";
 
   if (!jobTitle || jobTitle === "" || jobTitle === null)
     throw "You must provide a Job Title for your entry";
   if (typeof jobTitle !== "string" || typeof jobTitle == "undefined")
     throw "Type of Job Title input must be String";
+
+  if (!description || description === "" || description === null)
+    throw "You must provide a description for your entry";
+  if (typeof description !== "string" || typeof description == "undefined")
+    throw "Type of description input must be String";
 
   if (!timeStamp || timeStamp === "" || timeStamp === null)
     throw "You must provide a timeStamp for your entry";
@@ -62,9 +69,10 @@ async function newJob(
   const jobCollection = await jobdb();
 
   const newJob = {
-    CompanyName: CompanyName,
+    companyName: companyName,
     jobTitle: jobTitle,
     timeStamp: timeStamp,
+    description: description,
     appLink: appLink,
     status: status,
     notes: notes,
@@ -77,11 +85,11 @@ async function newJob(
   return newUserDetails;
 }
 
-async function patchUpdate(id, CompanyName, jobTitle, appLink, status, notes) {
+async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
   if (!id || typeof id !== "string" || id === undefined || id === null)
     throw "You must provide an id to search for";
   else if (
-    CompanyName == undefined &&
+    companyName == undefined &&
     jobTitle == undefined &&
     appLink == undefined &&
     status == undefined &&
@@ -92,8 +100,8 @@ async function patchUpdate(id, CompanyName, jobTitle, appLink, status, notes) {
     const jobCollection = await jobdb();
     const old = await this.getJobById(id);
 
-    if (CompanyName == undefined) {
-      CompanyName = old.CompanyName;
+    if (companyName == undefined) {
+      companyName = old.companyName;
     }
     if (jobTitle == undefined) {
       jobTitle = old.jobTitle;
@@ -110,7 +118,7 @@ async function patchUpdate(id, CompanyName, jobTitle, appLink, status, notes) {
     let updatedJobData;
 
     updatedJobData = {
-      CompanyName: CompanyName,
+      companyName: companyName,
       jobTitle: jobTitle,
       timeStamp: old.timeStamp,
       appLink: appLink,
@@ -150,7 +158,7 @@ async function changeJobStatus(id, status, timeStamp) {
   let updatedJobData;
 
   updatedJobData = {
-    CompanyName: old.CompanyName,
+    companyName: old.companyName,
     jobTitle: old.jobTitle,
     timeStamp: timeStamp,
     appLink: old.appLink,
