@@ -241,7 +241,6 @@ function Homepage(props) {
             <CardContent>
               <Typography
                 variant="subtitle1"
-                color="#2e3338"
                 align="left"
                 fontWeight="fontWeightBold"
               >
@@ -249,7 +248,6 @@ function Homepage(props) {
               </Typography>
               <Typography
                 variant="body2"
-                color="#2e3338"
                 component="p"
                 align="left"
               >
@@ -296,7 +294,7 @@ function Homepage(props) {
     );
   } 
   
-  console.log(jobData)
+  // console.log(jobData)
   return (
     <div>
       <Grid container spacing={2}>
