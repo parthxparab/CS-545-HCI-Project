@@ -1,6 +1,6 @@
 // indes file for data goes here
-const user = require("./user");
+const job = require("./job");
 
 module.exports = {
-  user: user,
+  job: job,
 };
