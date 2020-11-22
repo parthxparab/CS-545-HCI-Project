@@ -269,6 +269,7 @@ function Homepage(props) {
                 {job.jobTitle}
               </Typography>
               <Typography variant="body2" component="p" align="left">
+
                 {job.jobDescription}
               </Typography>
             </CardContent>
@@ -304,6 +305,7 @@ function Homepage(props) {
         );
       });
   };
+
 
   return (
     <div>
