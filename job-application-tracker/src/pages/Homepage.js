@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import AppliedComponent from "../Components/AppliedComponent";
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,13 +12,13 @@ import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
+
+import axios from "axios";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -82,15 +82,15 @@ const statuses = [
   },
   {
     status: "Interview",
-    cardColor: "#99ea9b",
+    cardColor: "#79e27b",
   },
   {
     status: "Accept",
-    cardColor: "#99ea9b",
+    cardColor: "#58da5a",
   },
   {
     status: "Reject",
-    cardColor: "#99ea9b",
+    cardColor: "#f1856a",
   },
 ];
 
@@ -105,6 +105,22 @@ function Homepage(props) {
   const [jTitle, setJTitle] = React.useState("");
   const [jDescription, setJDescription] = React.useState("");
   const [modalStyle] = React.useState(getModalStyle);
+  const [gridJobData, setGridJobData] = useState([]);
+
+  useEffect(() => {
+    console.log("render");
+    async function fetchData() {
+      try {
+        axios.get("http://localhost:8000/api/job").then((response) => {
+          console.log(response.data);
+          setGridJobData(response.data);
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    fetchData();
+  }, []);
 
   const handleOpen = (job) => {
     setOpen(true);
@@ -115,14 +131,18 @@ function Homepage(props) {
     setOpen(false);
   };
 
-  const deleteJob = (job) => {
-    let modifiedJobs = jobData;
-
-    modifiedJobs = modifiedJobs.filter(function (item) {
-      return item !== job;
-    }); //used filter method to iterate through the list and delete the specific task that is given to the function.
-
-    setJobData(modifiedJobs); // Modifying the state in this current component
+  const deleteJob = async (job) => {
+    axios.delete("http://localhost:8000/api/job/" + String(job._id)).then(
+      (response) => {
+        console.log(response.data);
+        axios.get("http://localhost:8000/api/job").then((response) => {
+          setGridJobData(response.data);
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   };
 
   const addInformation = (e) => {
@@ -198,8 +218,10 @@ function Homepage(props) {
   };
 
   const displayJobs = (s) => {
-    return(
-      jobData.filter(job => s.status === job.status).map((job, index) => {
+    // return jobData
+    return gridJobData
+      .filter((job) => s.status === job.status)
+      .map((job, index) => {
         return (
           <Card
             style={{ backgroundColor: s.cardColor }}
@@ -237,33 +259,22 @@ function Homepage(props) {
               titleTypographyProps={{ variant: "h6" }}
               subheader="September 14, 2016"
             />
-    
+
             <CardContent>
               <Typography
                 variant="subtitle1"
-                color="#2e3338"
                 align="left"
                 fontWeight="fontWeightBold"
               >
                 {job.jobTitle}
               </Typography>
-              <Typography
-                variant="body2"
-                color="#2e3338"
-                component="p"
-                align="left"
-              >
+              <Typography variant="body2" component="p" align="left">
+
                 {job.jobDescription}
               </Typography>
             </CardContent>
-    
+
             <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
-              </IconButton>
-              <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton>
               <IconButton
                 onClick={() => {
                   deleteJob(job);
@@ -284,7 +295,7 @@ function Homepage(props) {
                 <ExpandMoreIcon />
               </IconButton>
             </CardActions>
-    
+
             <Collapse in={activeIndex === index} timeout="auto" unmountOnExit>
               <CardContent>
                 <Typography paragraph>Notes:</Typography>
@@ -292,15 +303,14 @@ function Homepage(props) {
             </Collapse>
           </Card>
         );
-      })
-    );
-  } 
-  
-  console.log(jobData)
+      });
+  };
+
+
   return (
     <div>
       <Grid container spacing={2}>
-        {statuses.map((s,idx) => {
+        {statuses.map((s, idx) => {
           return (
             <Grid
               item
@@ -311,17 +321,11 @@ function Homepage(props) {
                 padding: "6px",
                 backgroundColor: "#f8f8f8",
               }}
-              key = {idx}
+              key={idx}
             >
-
-              <AppliedComponent status={s.status} getData={setJobData} />
-              {
-                jobData.length > 0 
-                ? <ul>
-                    {displayJobs(s)}
-                  </ul> 
-                : null
-              }
+              <AppliedComponent status={s.status} getData={setGridJobData} />
+              {/* {jobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null} */}
+              {gridJobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null}
             </Grid>
           );
         })}
