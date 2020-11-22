@@ -3,7 +3,10 @@ import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
-import JobCard from "./JobCard";
+
+import axios from "axios";
+
+// import JobCard from "./JobCard";
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -50,7 +53,6 @@ export default function AppliedComponent(props) {
   const [companyName, setCompanyName] = React.useState("");
   const [jobTitle, setJobTitle] = React.useState("");
   const [jobDescription, setJobDescription] = React.useState("");
-  const [todo, setTodo] = React.useState([]); //items for the child component in JobCard
   const [modalStyle] = React.useState(getModalStyle);
 
   const _checkInformationValid = () => {
@@ -60,20 +62,36 @@ export default function AppliedComponent(props) {
       return false;
     }
   };
-
+  async function postData(packet) {
+    axios.post("http://localhost:8000/api/job", packet).then(
+      (response) => {
+        console.log(response.data);
+        axios.get("http://localhost:8000/api/job").then((response) => {
+          getData(response.data);
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
   const addInformation = (e) => {
     if (_checkInformationValid() === true) {
-      let temp = todo;
-      temp.push({
+      let packet = {
         companyName: companyName,
         jobTitle: jobTitle,
-        jobDescription: jobDescription,
-      });
+        description: jobDescription,
+        timeStamp: "Nov 21, 2020",
+        notes: "x",
+        appLink: "x",
+        status: props.status,
+      };
+
+      postData(packet);
+
       setCompanyName("");
       setJobTitle("");
       setJobDescription("");
-      setTodo(temp);
-      getData(temp);
     } else {
       alert("Please provide all the details");
     }
@@ -133,17 +151,17 @@ export default function AppliedComponent(props) {
     setOpen(false);
   };
 
-  const handleColor = () => {
-    if (props.status === "Applied") {
-      return "#99ea9b";
-    } else if (props.status === "Interview") {
-      return "#79e27b";
-    } else if (props.status === "Accept") {
-      return "#58da5a";
-    } else if (props.status === "Reject") {
-      return "#f1856a";
-    }
-  };
+  // const handleColor = () => {
+  //   if (props.status === "Applied") {
+  //     return "#99ea9b";
+  //   } else if (props.status === "Interview") {
+  //     return "#79e27b";
+  //   } else if (props.status === "Accept") {
+  //     return "#58da5a";
+  //   } else if (props.status === "Reject") {
+  //     return "#f1856a";
+  //   }
+  // };
 
   return (
     <div className="OuterBody">
@@ -168,7 +186,7 @@ export default function AppliedComponent(props) {
           {body}
         </Modal>
       </div>
-      <JobCard items={todo} gridColor={handleColor()} setItems={setTodo} />
+      {/* <JobCard items={todo} gridColor={handleColor()} setItems={setTodo} /> */}
     </div>
   );
 }
