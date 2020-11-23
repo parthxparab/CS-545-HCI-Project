@@ -73,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
       width: 200,
     },
   },
+  modalButton: {
+    margin: 16,
+  }
 }));
 
 const statuses = [
@@ -104,8 +107,10 @@ function Homepage(props) {
   const [cName, setCName] = React.useState("");
   const [jTitle, setJTitle] = React.useState("");
   const [jDescription, setJDescription] = React.useState("");
+  const [aLink, setAlink] = React.useState("");
   const [modalStyle] = React.useState(getModalStyle);
   const [gridJobData, setGridJobData] = useState([]);
+  const [jNotes, setJnotes] = React.useState("");
 
   useEffect(() => {
     console.log("render");
@@ -146,7 +151,7 @@ function Homepage(props) {
   };
 
   const addInformation = (e) => {
-    if (cName !== "" || jTitle !== "" || jDescription !== "") {
+    if (cName !== "" || jTitle !== "" || jDescription !== "" || aLink !== "") {
       updateJobCard();
     } else {
       alert("Please enter all details!");
@@ -185,13 +190,38 @@ function Homepage(props) {
           <TextField
             id="outlined-textarea"
             label="Company Description"
-            defaultValue={currentjob.jobDescription}
+            defaultValue={currentjob.description}
             multiline
             variant="outlined"
             onChange={(e) => setJDescription(e.target.value)}
           />
         </div>
-        <Button type="submit">Edit</Button>
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Application link"
+            defaultValue={currentjob.appLink}
+            multiline
+            variant="outlined"
+            onChange={(e) => setAlink(e.target.value)}
+          />
+        </div>
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Notes"
+            defaultValue={currentjob.notes}
+            multiline
+            variant="outlined"
+            onChange={(e) => setJnotes(e.target.value)}
+          />
+        </div>
+        <Button className={classes.modalButton} variant="contained" color="primary" size="small" type="submit">
+          Edit
+        </Button>
+        <Button className={classes.modalButton} variant="contained" color="primary" size="small" onClick={handleClose}>
+          Cancel
+        </Button>
       </form>
     </div>
   );
@@ -206,9 +236,13 @@ function Homepage(props) {
         item.jobTitle = jTitle.length > 0 ? jTitle : currentjob.jobTitle;
         item.jobDescription =
           jDescription.length > 0 ? jDescription : currentjob.jobDescription;
+        item.appLink = aLink.length > 0 ? aLink : currentjob.appLink;
+        item.notes = jNotes.length > 0 ? jNotes : currentjob.notes;
         setCName("");
         setJTitle("");
         setJDescription("");
+        setAlink("");
+        setJnotes("");
         return item;
       }
       return item;
@@ -244,6 +278,14 @@ function Homepage(props) {
                   >
                     <EditIcon />
                   </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      deleteJob(job);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+
                   <Modal
                     open={open}
                     onClose={handleClose}
@@ -266,22 +308,21 @@ function Homepage(props) {
                 align="left"
                 fontWeight="fontWeightBold"
               >
-                {job.jobTitle}
+                Job title: {job.jobTitle}
               </Typography>
               <Typography variant="body2" component="p" align="left">
 
-                {job.jobDescription}
+                Job description: {job.description}
+              </Typography>
+
+              <Typography variant="body2" component="p" align="left">
+
+                Job link: {job.appLink}
               </Typography>
             </CardContent>
 
             <CardActions disableSpacing>
-              <IconButton
-                onClick={() => {
-                  deleteJob(job);
-                }}
-              >
-                <DeleteIcon />
-              </IconButton>
+
               <IconButton
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: activeIndex === index,
@@ -298,7 +339,7 @@ function Homepage(props) {
 
             <Collapse in={activeIndex === index} timeout="auto" unmountOnExit>
               <CardContent>
-                <Typography paragraph>Notes:</Typography>
+                <Typography paragraph>Notes: {job.notes}</Typography>
               </CardContent>
             </Collapse>
           </Card>
