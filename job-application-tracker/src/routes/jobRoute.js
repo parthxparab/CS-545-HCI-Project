@@ -50,10 +50,10 @@ router.post("/", async (req, res) => {
   }
   //  handle app link later - parth
 
-  // if (!jobInfo.appLink) {
-  //   res.status(400).json({ error: "You must provide appLink" });
-  //   return;
-  // }
+  if (!jobInfo.appLink) {
+    res.status(400).json({ error: "You must provide appLink" });
+    return;
+  }
 
   if (!jobInfo.status) {
     res.status(400).json({ error: "You must provide status" });
