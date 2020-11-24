@@ -270,7 +270,37 @@ function Homepage(props) {
               }
               action={
                 <div>
-                  <IconButton
+                  
+
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    animation="false"
+                  >
+                    {editCard}
+                  </Modal>
+                </div>
+              }
+              title={job.companyName}
+              titleTypographyProps={{ variant: "h6" }}
+              subheader={job.jobTitle}
+              align="left"
+            />
+
+            {/* <CardContent>
+              <Typography
+                variant="subtitle1"
+                align="left"
+                fontWeight="fontWeightBold">
+                {job.jobTitle}
+              </Typography>
+              
+            </CardContent> */}
+
+            <CardActions disableSpacing>
+            <IconButton
                     aria-label="more"
                     aria-controls="long-menu"
                     aria-haspopup="true"
@@ -286,43 +316,6 @@ function Homepage(props) {
                     <DeleteIcon />
                   </IconButton>
 
-                  <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    animation="false"
-                  >
-                    {editCard}
-                  </Modal>
-                </div>
-              }
-              title={job.companyName}
-              titleTypographyProps={{ variant: "h6" }}
-              subheader="September 14, 2016"
-            />
-
-            <CardContent>
-              <Typography
-                variant="subtitle1"
-                align="left"
-                fontWeight="fontWeightBold"
-              >
-                Job title: {job.jobTitle}
-              </Typography>
-              <Typography variant="body2" component="p" align="left">
-
-                Job description: {job.description}
-              </Typography>
-
-              <Typography variant="body2" component="p" align="left">
-
-                Job link: {job.appLink}
-              </Typography>
-            </CardContent>
-
-            <CardActions disableSpacing>
-
               <IconButton
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: activeIndex === index,
@@ -334,11 +327,20 @@ function Homepage(props) {
                 aria-label="show more"
               >
                 <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
+            </IconButton>
+        </CardActions>
 
             <Collapse in={activeIndex === index} timeout="auto" unmountOnExit>
               <CardContent>
+              <Typography variant="body2" component="p" align="left">
+
+    Job description: {job.description}
+</Typography>
+
+<Typography variant="body2" component="p" align="left">
+
+Job link: {job.appLink}
+</Typography>
                 <Typography paragraph>Notes: {job.notes}</Typography>
               </CardContent>
             </Collapse>
