@@ -27,7 +27,8 @@ async function newJob(
   jobTitle,
   timeStamp,
   description,
-  appLink = "www.google.com",
+  appLink,
+  // appLink = "www.google.com",
   status = "NA",
   notes = ""
 ) {
@@ -46,6 +47,11 @@ async function newJob(
   if (typeof description !== "string" || typeof description == "undefined")
     throw "Type of description input must be String";
 
+  if (!appLink || appLink === "" || appLink === null)
+    throw "You must provide a application link for your entry";
+  if (typeof appLink !== "string" || typeof appLink == "undefined")
+    throw "Type of application link input must be String";
+
   if (!timeStamp || timeStamp === "" || timeStamp === null)
     throw "You must provide a timeStamp for your entry";
   if (typeof timeStamp !== "string" || typeof timeStamp == "undefined")
@@ -55,11 +61,6 @@ async function newJob(
     if (typeof notes !== "string" || typeof notes == "undefined")
       throw "Type of notes input must be String";
   }
-
-  if (!appLink || appLink === "" || appLink === null)
-    throw "You must provide a application link for your entry";
-  if (typeof appLink !== "string" || typeof appLink == "undefined")
-    throw "Type of application link input must be String";
 
   if (!status || status === "" || status === null)
     throw "You must provide a status for your entry";
@@ -93,7 +94,8 @@ async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
     jobTitle == undefined &&
     appLink == undefined &&
     status == undefined &&
-    notes == undefined
+    notes == undefined &&
+    appLink == undefined
   )
     throw "You must enter atleast one value";
   else {
@@ -106,14 +108,14 @@ async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
     if (jobTitle == undefined) {
       jobTitle = old.jobTitle;
     }
-    if (appLink == undefined) {
-      appLink = old.appLink;
-    }
     if (status == undefined) {
       status = old.status;
     }
     if (notes == undefined) {
       notes = old.notes;
+    }
+    if (appLink == undefined) {
+      appLink = old.appLink;
     }
     let updatedJobData;
 
@@ -124,6 +126,7 @@ async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
       appLink: appLink,
       status: status,
       notes: notes,
+      jobLink: jobLink
     };
     const newInsertInformation = await jobCollection.updateOne(
       { _id: ObjectId(id) },
@@ -161,9 +164,9 @@ async function changeJobStatus(id, status, timeStamp) {
     companyName: old.companyName,
     jobTitle: old.jobTitle,
     timeStamp: timeStamp,
-    appLink: old.appLink,
     status: status,
     notes: old.notes,
+    appLink: old.appLink
   };
 
   const newInsertInformation = await jobCollection.updateOne(
