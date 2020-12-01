@@ -103,7 +103,8 @@ async function patchUpdate(
     appLink === undefined &&
     status === undefined &&
     notes === undefined &&
-    appLink === undefined
+    appLink === undefined &&
+    description === undefined
   )
     throw "You must enter atleast one value";
   else {

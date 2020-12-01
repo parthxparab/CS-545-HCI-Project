@@ -121,8 +121,8 @@ router.patch("/:id", async (req, res) => {
       updatedJob.jobTitle,
       updatedJob.appLink,
       updatedJob.status,
-      updatedJob.description,
-      updatedJob.notes
+      updatedJob.notes,
+      updatedJob.description
     );
     res.json(updatedData);
   } catch (e) {
