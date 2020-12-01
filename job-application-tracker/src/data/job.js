@@ -27,7 +27,8 @@ async function newJob(
   jobTitle,
   timeStamp,
   description,
-  appLink = "www.google.com",
+  appLink,
+  // appLink = "www.google.com",
   status = "NA",
   notes = ""
 ) {
@@ -46,6 +47,11 @@ async function newJob(
   if (typeof description !== "string" || typeof description == "undefined")
     throw "Type of description input must be String";
 
+  if (!appLink || appLink === "" || appLink === null)
+    throw "You must provide a application link for your entry";
+  if (typeof appLink !== "string" || typeof appLink == "undefined")
+    throw "Type of application link input must be String";
+
   if (!timeStamp || timeStamp === "" || timeStamp === null)
     throw "You must provide a timeStamp for your entry";
   if (typeof timeStamp !== "string" || typeof timeStamp == "undefined")
@@ -55,11 +61,6 @@ async function newJob(
     if (typeof notes !== "string" || typeof notes == "undefined")
       throw "Type of notes input must be String";
   }
-
-  if (!appLink || appLink === "" || appLink === null)
-    throw "You must provide a application link for your entry";
-  if (typeof appLink !== "string" || typeof appLink == "undefined")
-    throw "Type of application link input must be String";
 
   if (!status || status === "" || status === null)
     throw "You must provide a status for your entry";
@@ -85,35 +86,48 @@ async function newJob(
   return newUserDetails;
 }
 
-async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
+async function patchUpdate(
+  id,
+  companyName,
+  jobTitle,
+  appLink,
+  status,
+  notes,
+  description
+) {
   if (!id || typeof id !== "string" || id === undefined || id === null)
     throw "You must provide an id to search for";
   else if (
-    companyName == undefined &&
-    jobTitle == undefined &&
-    appLink == undefined &&
-    status == undefined &&
-    notes == undefined
+    companyName === undefined &&
+    jobTitle === undefined &&
+    appLink === undefined &&
+    status === undefined &&
+    notes === undefined &&
+    appLink === undefined
   )
     throw "You must enter atleast one value";
   else {
     const jobCollection = await jobdb();
     const old = await this.getJobById(id);
 
-    if (companyName == undefined) {
+    if (companyName === undefined) {
       companyName = old.companyName;
     }
-    if (jobTitle == undefined) {
+    if (jobTitle === undefined) {
       jobTitle = old.jobTitle;
     }
-    if (appLink == undefined) {
-      appLink = old.appLink;
-    }
-    if (status == undefined) {
+    if (status === undefined) {
       status = old.status;
     }
-    if (notes == undefined) {
+    if (notes === undefined) {
       notes = old.notes;
+    }
+    if (appLink === undefined) {
+      appLink = old.appLink;
+    }
+
+    if (description === undefined) {
+      description = old.description;
     }
     let updatedJobData;
 
@@ -121,6 +135,7 @@ async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
       companyName: companyName,
       jobTitle: jobTitle,
       timeStamp: old.timeStamp,
+      description: description,
       appLink: appLink,
       status: status,
       notes: notes,
@@ -161,9 +176,9 @@ async function changeJobStatus(id, status, timeStamp) {
     companyName: old.companyName,
     jobTitle: old.jobTitle,
     timeStamp: timeStamp,
-    appLink: old.appLink,
     status: status,
     notes: old.notes,
+    appLink: old.appLink,
   };
 
   const newInsertInformation = await jobCollection.updateOne(

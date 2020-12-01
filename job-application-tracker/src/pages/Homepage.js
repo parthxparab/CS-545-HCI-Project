@@ -17,7 +17,13 @@ import EditIcon from "@material-ui/icons/Edit";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Modal from "@material-ui/core/Modal";
-
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import BookmarksIcon from "@material-ui/icons/Bookmarks";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import StarsIcon from "@material-ui/icons/Stars";
+import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import axios from "axios";
 
 function rand() {
@@ -47,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
   expand: {
     transform: "rotate(0deg)",
-    marginLeft: "auto",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
@@ -66,12 +71,16 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    marginRight: theme.spacing(2),
   },
   modal: {
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
       width: 200,
     },
+  },
+  modalButton: {
+    margin: 16,
   },
 }));
 
@@ -95,8 +104,6 @@ const statuses = [
 ];
 
 function Homepage(props) {
-  const [jobData, setJobData] = React.useState([]);
-
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(null);
@@ -104,23 +111,33 @@ function Homepage(props) {
   const [cName, setCName] = React.useState("");
   const [jTitle, setJTitle] = React.useState("");
   const [jDescription, setJDescription] = React.useState("");
+  const [aLink, setAlink] = React.useState("");
   const [modalStyle] = React.useState(getModalStyle);
   const [gridJobData, setGridJobData] = useState([]);
+  const [jNotes, setJnotes] = React.useState("");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const anchorRef = React.useRef(null);
+
+  const prevOpen = React.useRef(open);
 
   useEffect(() => {
     console.log("render");
     async function fetchData() {
       try {
         axios.get("http://localhost:8000/api/job").then((response) => {
-          console.log(response.data);
           setGridJobData(response.data);
         });
+        if (prevOpen.current === true && open === false) {
+          anchorRef.current.focus();
+        }
+
+        prevOpen.current = open;
       } catch (e) {
         console.log(e);
       }
     }
     fetchData();
-  }, []);
+  }, [open]);
 
   const handleOpen = (job) => {
     setOpen(true);
@@ -129,6 +146,10 @@ function Homepage(props) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseTwo = () => {
+    setAnchorEl(null);
   };
 
   const deleteJob = async (job) => {
@@ -146,7 +167,7 @@ function Homepage(props) {
   };
 
   const addInformation = (e) => {
-    if (cName !== "" || jTitle !== "" || jDescription !== "") {
+    if (cName !== "" || jTitle !== "" || jDescription !== "" || aLink !== "") {
       updateJobCard();
     } else {
       alert("Please enter all details!");
@@ -156,6 +177,10 @@ function Homepage(props) {
 
     e.target.reset();
     e.preventDefault();
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const editCard = (
@@ -185,36 +210,91 @@ function Homepage(props) {
           <TextField
             id="outlined-textarea"
             label="Company Description"
-            defaultValue={currentjob.jobDescription}
+            defaultValue={currentjob.description}
             multiline
             variant="outlined"
             onChange={(e) => setJDescription(e.target.value)}
           />
         </div>
-        <Button type="submit">Edit</Button>
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Application link"
+            defaultValue={currentjob.appLink}
+            multiline
+            variant="outlined"
+            onChange={(e) => setAlink(e.target.value)}
+          />
+        </div>
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Notes"
+            defaultValue={currentjob.notes}
+            multiline
+            variant="outlined"
+            onChange={(e) => setJnotes(e.target.value)}
+          />
+        </div>
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          type="submit"
+        >
+          Apply
+        </Button>
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
       </form>
     </div>
   );
 
-  const updateJobCard = () => {
-    let editJobs = jobData;
+  async function editData(packet, id) {
+    axios.patch(`http://localhost:8000/api/job/${id}`, packet).then(
+      (response) => {
+        console.log(response.data);
+        axios.get("http://localhost:8000/api/job").then((response) => {
+          setGridJobData(response.data);
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
 
+  const updateJobCard = () => {
+    let editJobs = gridJobData;
     editJobs = editJobs.map((item) => {
       if (item === currentjob) {
-        console.log(item);
         item.companyName = cName.length > 0 ? cName : currentjob.companyName;
         item.jobTitle = jTitle.length > 0 ? jTitle : currentjob.jobTitle;
-        item.jobDescription =
-          jDescription.length > 0 ? jDescription : currentjob.jobDescription;
+        item.description =
+          jDescription.length > 0 ? jDescription : currentjob.description;
+        item.appLink = aLink.length > 0 ? aLink : currentjob.appLink;
+        item.notes = jNotes.length > 0 ? jNotes : currentjob.notes;
         setCName("");
         setJTitle("");
         setJDescription("");
+        setAlink("");
+        setJnotes("");
         return item;
       }
       return item;
     });
 
-    setJobData(editJobs); // Modifying the state in this current component
+    editData(editJobs[0], editJobs[0]._id);
+
+    // setJobData(editJobs); // Modifying the state in this current component
   };
 
   const displayJobs = (s) => {
@@ -237,13 +317,42 @@ function Homepage(props) {
               action={
                 <div>
                   <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
+                    aria-label="settings"
+                    aria-controls="simple-menu"
                     aria-haspopup="true"
-                    onClick={() => handleOpen(job)}
+                    onClick={handleClick}
                   >
-                    <EditIcon />
+                    <MoreVertIcon />
                   </IconButton>
+
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleCloseTwo}
+                  >
+                    <MenuItem onClick={() => handleOpen(job)}>
+                      <EditIcon
+                        fontSize="small"
+                        marginleft="10px"
+                        style={{ marginRight: "2px" }}
+                      />
+                      Edit
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        deleteJob(job);
+                      }}
+                    >
+                      <DeleteIcon
+                        fontSize="small"
+                        marginleft="10px"
+                        style={{ marginRight: "2px" }}
+                      />
+                      Delete
+                    </MenuItem>{" "}
+                  </Menu>
                   <Modal
                     open={open}
                     onClose={handleClose}
@@ -257,32 +366,25 @@ function Homepage(props) {
               }
               title={job.companyName}
               titleTypographyProps={{ variant: "h6" }}
-              subheader="September 14, 2016"
+              subheader={job.jobTitle}
+              align="left"
             />
 
-            <CardContent>
-              <Typography
-                variant="subtitle1"
-                align="left"
-                fontWeight="fontWeightBold"
-              >
-                {job.jobTitle}
-              </Typography>
-              <Typography variant="body2" component="p" align="left">
-
-                {job.jobDescription}
-              </Typography>
-            </CardContent>
-
-            <CardActions disableSpacing>
-              <IconButton
-                onClick={() => {
-                  deleteJob(job);
-                }}
-              >
-                <DeleteIcon />
+            <CardActions>
+              <IconButton>
+                <BookmarksIcon />
+              </IconButton>
+              <IconButton>
+                <PeopleAltIcon />
+              </IconButton>
+              <IconButton>
+                <StarsIcon />
+              </IconButton>
+              <IconButton>
+                <NewReleasesIcon />
               </IconButton>
               <IconButton
+                // style={{ edge: "end" }}
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: activeIndex === index,
                 })}
@@ -298,14 +400,20 @@ function Homepage(props) {
 
             <Collapse in={activeIndex === index} timeout="auto" unmountOnExit>
               <CardContent>
-                <Typography paragraph>Notes:</Typography>
+                <Typography variant="body2" component="p" align="left">
+                  Job description: {job.description}
+                </Typography>
+
+                <Typography variant="body2" component="p" align="left">
+                  Job link: {job.appLink}
+                </Typography>
+                <Typography paragraph>Notes: {job.notes}</Typography>
               </CardContent>
             </Collapse>
           </Card>
         );
       });
   };
-
 
   return (
     <div>

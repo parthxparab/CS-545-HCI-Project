@@ -50,10 +50,10 @@ router.post("/", async (req, res) => {
   }
   //  handle app link later - parth
 
-  // if (!jobInfo.appLink) {
-  //   res.status(400).json({ error: "You must provide appLink" });
-  //   return;
-  // }
+  if (!jobInfo.appLink) {
+    res.status(400).json({ error: "You must provide appLink" });
+    return;
+  }
 
   if (!jobInfo.status) {
     res.status(400).json({ error: "You must provide status" });
@@ -99,6 +99,13 @@ router.patch("/:id", async (req, res) => {
   if (!updatedJob.status) {
     updatedJob.status = undefined;
   }
+  if (!updatedJob.description) {
+    updatedJob.description = undefined;
+  }
+
+  if (!updatedJob.notes) {
+    updatedJob.notes = undefined;
+  }
 
   try {
     await jobMethods.getJobById(req.params.id);
@@ -113,7 +120,9 @@ router.patch("/:id", async (req, res) => {
       updatedJob.companyName,
       updatedJob.jobTitle,
       updatedJob.appLink,
-      updatedJob.status
+      updatedJob.status,
+      updatedJob.description,
+      updatedJob.notes
     );
     res.json(updatedData);
   } catch (e) {

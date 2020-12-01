@@ -43,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ede1d4",
     color: "#2e3338",
   },
+  modalButton: {
+    margin: 16,
+  },
 }));
 
 export default function AppliedComponent(props) {
@@ -54,9 +57,11 @@ export default function AppliedComponent(props) {
   const [jobTitle, setJobTitle] = React.useState("");
   const [jobDescription, setJobDescription] = React.useState("");
   const [modalStyle] = React.useState(getModalStyle);
+  const [appLink, setAppLink] = React.useState("");
+  const [notes, setNotes] = React.useState("");
 
   const _checkInformationValid = () => {
-    if ((companyName !== "" && jobTitle !== "") || jobDescription !== "") {
+    if (companyName !== "" && jobTitle !== "") {
       return true;
     } else {
       return false;
@@ -80,10 +85,10 @@ export default function AppliedComponent(props) {
       let packet = {
         companyName: companyName,
         jobTitle: jobTitle,
-        description: jobDescription,
+        description: jobDescription !== "" ? jobDescription : " ",
         timeStamp: "Nov 21, 2020",
-        notes: "x",
-        appLink: "x",
+        notes: notes !== "" ? notes : " ",
+        appLink: appLink !== "" ? appLink : " ",
         status: props.status,
       };
 
@@ -92,6 +97,8 @@ export default function AppliedComponent(props) {
       setCompanyName("");
       setJobTitle("");
       setJobDescription("");
+      setAppLink("");
+      setNotes("");
     } else {
       alert("Please provide all the details");
     }
@@ -100,6 +107,13 @@ export default function AppliedComponent(props) {
 
     e.target.reset(); //To go back to the default textField of the form.
     e.preventDefault(); //To Stop reloading the page as it is a form.
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const body = (
@@ -136,32 +150,49 @@ export default function AppliedComponent(props) {
             onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
-        <Button variant="contained" color="primary" size="small" type="submit">
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Application link"
+            placeholder="Enter application Link"
+            multiline
+            variant="outlined"
+            onChange={(e) => setAppLink(e.target.value)}
+          />
+        </div>
+        <div>
+          <TextField
+            id="outlined-textarea"
+            label="Notes"
+            placeholder="Enter notes"
+            multiline
+            variant="outlined"
+            onChange={(e) => setNotes(e.target.value)}
+          />
+        </div>
+        {/* <div className={classes.modalButton}> */}
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          type="submit"
+        >
           Save
         </Button>
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={handleClose}
+        >
+          Cancel
+        </Button>
+        {/* </div> */}
       </form>
     </div>
   );
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  // const handleColor = () => {
-  //   if (props.status === "Applied") {
-  //     return "#99ea9b";
-  //   } else if (props.status === "Interview") {
-  //     return "#79e27b";
-  //   } else if (props.status === "Accept") {
-  //     return "#58da5a";
-  //   } else if (props.status === "Reject") {
-  //     return "#f1856a";
-  //   }
-  // };
 
   return (
     <div className="OuterBody">
@@ -176,6 +207,7 @@ export default function AppliedComponent(props) {
         >
           +
         </Button>
+
         <Modal
           open={open}
           onClose={handleClose}
