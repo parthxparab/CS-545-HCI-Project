@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
   modalButton: {
     margin: 16,
-  }
+  },
 }));
 
 export default function AppliedComponent(props) {
@@ -61,7 +61,7 @@ export default function AppliedComponent(props) {
   const [notes, setNotes] = React.useState("");
 
   const _checkInformationValid = () => {
-    if ((companyName !== "" && jobTitle !== "")) {
+    if (companyName !== "" && jobTitle !== "") {
       return true;
     } else {
       return false;
@@ -98,7 +98,7 @@ export default function AppliedComponent(props) {
       setJobTitle("");
       setJobDescription("");
       setAppLink("");
-      setNotes("")
+      setNotes("");
     } else {
       alert("Please provide all the details");
     }
@@ -171,31 +171,28 @@ export default function AppliedComponent(props) {
           />
         </div>
         {/* <div className={classes.modalButton}> */}
-        <Button className={classes.modalButton} variant="contained" color="primary" size="small" type="submit">
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          type="submit"
+        >
           Save
         </Button>
-        <Button className={classes.modalButton} variant="contained" color="primary" size="small" onClick={handleClose}>
+        <Button
+          className={classes.modalButton}
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
         {/* </div> */}
-
       </form>
-    </div >
+    </div>
   );
-
-
-
-  // const handleColor = () => {
-  //   if (props.status === "Applied") {
-  //     return "#99ea9b";
-  //   } else if (props.status === "Interview") {
-  //     return "#79e27b";
-  //   } else if (props.status === "Accept") {
-  //     return "#58da5a";
-  //   } else if (props.status === "Reject") {
-  //     return "#f1856a";
-  //   }
-  // };
 
   return (
     <div className="OuterBody">
@@ -219,7 +216,6 @@ export default function AppliedComponent(props) {
           animation="false"
         >
           {body}
-
         </Modal>
       </div>
       {/* <JobCard items={todo} gridColor={handleColor()} setItems={setTodo} /> */}

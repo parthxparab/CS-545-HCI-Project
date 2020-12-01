@@ -86,36 +86,48 @@ async function newJob(
   return newUserDetails;
 }
 
-async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
+async function patchUpdate(
+  id,
+  companyName,
+  jobTitle,
+  appLink,
+  status,
+  notes,
+  description
+) {
   if (!id || typeof id !== "string" || id === undefined || id === null)
     throw "You must provide an id to search for";
   else if (
-    companyName == undefined &&
-    jobTitle == undefined &&
-    appLink == undefined &&
-    status == undefined &&
-    notes == undefined &&
-    appLink == undefined
+    companyName === undefined &&
+    jobTitle === undefined &&
+    appLink === undefined &&
+    status === undefined &&
+    notes === undefined &&
+    appLink === undefined
   )
     throw "You must enter atleast one value";
   else {
     const jobCollection = await jobdb();
     const old = await this.getJobById(id);
 
-    if (companyName == undefined) {
+    if (companyName === undefined) {
       companyName = old.companyName;
     }
-    if (jobTitle == undefined) {
+    if (jobTitle === undefined) {
       jobTitle = old.jobTitle;
     }
-    if (status == undefined) {
+    if (status === undefined) {
       status = old.status;
     }
-    if (notes == undefined) {
+    if (notes === undefined) {
       notes = old.notes;
     }
-    if (appLink == undefined) {
+    if (appLink === undefined) {
       appLink = old.appLink;
+    }
+
+    if (description === undefined) {
+      description = old.description;
     }
     let updatedJobData;
 
@@ -123,10 +135,10 @@ async function patchUpdate(id, companyName, jobTitle, appLink, status, notes) {
       companyName: companyName,
       jobTitle: jobTitle,
       timeStamp: old.timeStamp,
+      description: description,
       appLink: appLink,
       status: status,
       notes: notes,
-      jobLink: jobLink
     };
     const newInsertInformation = await jobCollection.updateOne(
       { _id: ObjectId(id) },
@@ -166,7 +178,7 @@ async function changeJobStatus(id, status, timeStamp) {
     timeStamp: timeStamp,
     status: status,
     notes: old.notes,
-    appLink: old.appLink
+    appLink: old.appLink,
   };
 
   const newInsertInformation = await jobCollection.updateOne(
