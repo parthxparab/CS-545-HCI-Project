@@ -297,6 +297,60 @@ function Homepage(props) {
     // setJobData(editJobs); // Modifying the state in this current component
   };
 
+ 
+
+  const getButtons = (status) => {
+    
+    if(status === 'Applied'){
+      return <div>
+              <IconButton>
+                <PeopleAltIcon />
+              </IconButton>
+              <IconButton>
+                <StarsIcon />
+              </IconButton>
+              <IconButton>
+                <NewReleasesIcon />
+              </IconButton>
+            </div>;
+    }else if(status === 'Interview'){
+      return <div>
+              <IconButton>
+                <BookmarksIcon />
+              </IconButton>
+              <IconButton>
+                <StarsIcon />
+              </IconButton>
+              <IconButton>
+                <NewReleasesIcon />
+              </IconButton>
+            </div>;
+    }else if(status === 'Accept'){
+      return <div>
+              <IconButton>
+                <BookmarksIcon />
+              </IconButton>
+              <IconButton>
+                <PeopleAltIcon />
+              </IconButton>
+              <IconButton>
+                <NewReleasesIcon />
+              </IconButton>
+            </div>;
+    }else{
+      return <div>
+              <IconButton>
+                <BookmarksIcon />
+              </IconButton>
+              <IconButton>
+                <PeopleAltIcon />
+              </IconButton>
+              <IconButton>
+                <StarsIcon />
+              </IconButton>
+            </div>;
+    }
+  }
   const displayJobs = (s) => {
     // return jobData
     return gridJobData
@@ -371,18 +425,7 @@ function Homepage(props) {
             />
 
             <CardActions>
-              <IconButton>
-                <BookmarksIcon />
-              </IconButton>
-              <IconButton>
-                <PeopleAltIcon />
-              </IconButton>
-              <IconButton>
-                <StarsIcon />
-              </IconButton>
-              <IconButton>
-                <NewReleasesIcon />
-              </IconButton>
+              {getButtons(s.status)}
               <IconButton
                 // style={{ edge: "end" }}
                 className={clsx(classes.expand, {
@@ -431,7 +474,7 @@ function Homepage(props) {
               }}
               key={idx}
             >
-              <AppliedComponent status={s.status} getData={setGridJobData} />
+              <AppliedComponent status={s.status} icon={s.svgIcon} getData={setGridJobData} />
               {/* {jobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null} */}
               {gridJobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null}
             </Grid>
