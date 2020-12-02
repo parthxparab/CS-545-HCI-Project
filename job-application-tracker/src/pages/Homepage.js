@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
 import AppliedComponent from "../Components/AppliedComponent";
-import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -25,6 +24,17 @@ import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import StarsIcon from "@material-ui/icons/Stars";
 import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import axios from "axios";
+import Tooltip from "@material-ui/core/Tooltip";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -116,9 +126,6 @@ function Homepage(props) {
   const [gridJobData, setGridJobData] = useState([]);
   const [jNotes, setJnotes] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const anchorRef = React.useRef(null);
-
-  const prevOpen = React.useRef(open);
 
   useEffect(() => {
     console.log("render");
@@ -127,17 +134,12 @@ function Homepage(props) {
         axios.get("http://localhost:8000/api/job").then((response) => {
           setGridJobData(response.data);
         });
-        if (prevOpen.current === true && open === false) {
-          anchorRef.current.focus();
-        }
-
-        prevOpen.current = open;
       } catch (e) {
         console.log(e);
       }
     }
     fetchData();
-  }, [open]);
+  }, []);
 
   const handleOpen = (job) => {
     setOpen(true);
@@ -166,6 +168,27 @@ function Homepage(props) {
     );
   };
 
+  const updateStatus = async (job, status) => {
+    console.log(job);
+    let packet = {
+      status: status,
+      timeStamp: "Nov 21, 2020",
+    };
+    axios
+      .patch("http://localhost:8000/api/job/status/" + String(job._id), packet)
+      .then(
+        (response) => {
+          console.log(response.data);
+          axios.get("http://localhost:8000/api/job").then((response) => {
+            setGridJobData(response.data);
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+
   const addInformation = (e) => {
     if (cName !== "" || jTitle !== "" || jDescription !== "" || aLink !== "") {
       updateJobCard();
@@ -183,80 +206,82 @@ function Homepage(props) {
     setAnchorEl(event.currentTarget);
   };
 
-  const editCard = (
-    <div style={modalStyle} className={classes.paper}>
-      <form className={classes.modal} onSubmit={addInformation}>
-        <div>
-          <TextField
-            id="outlined-textarea"
-            label="Company Name"
-            defaultValue={currentjob.companyName}
-            multiline
-            variant="outlined"
-            onChange={(e) => setCName(e.target.value)}
-          />
-        </div>
-        <div>
-          <TextField
-            id="outlined-textarea"
-            label="Job Title"
-            defaultValue={currentjob.jobTitle}
-            multiline
-            variant="outlined"
-            onChange={(e) => setJTitle(e.target.value)}
-          />
-        </div>
-        <div>
-          <TextField
-            id="outlined-textarea"
-            label="Company Description"
-            defaultValue={currentjob.description}
-            multiline
-            variant="outlined"
-            onChange={(e) => setJDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <TextField
-            id="outlined-textarea"
-            label="Application link"
-            defaultValue={currentjob.appLink}
-            multiline
-            variant="outlined"
-            onChange={(e) => setAlink(e.target.value)}
-          />
-        </div>
-        <div>
-          <TextField
-            id="outlined-textarea"
-            label="Notes"
-            defaultValue={currentjob.notes}
-            multiline
-            variant="outlined"
-            onChange={(e) => setJnotes(e.target.value)}
-          />
-        </div>
-        <Button
-          className={classes.modalButton}
-          variant="contained"
-          color="primary"
-          size="small"
-          type="submit"
-        >
-          Apply
-        </Button>
-        <Button
-          className={classes.modalButton}
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={handleClose}
-        >
-          Cancel
-        </Button>
-      </form>
-    </div>
-  );
+  const editCard = () => {
+    return (
+      <div style={modalStyle} className={classes.paper}>
+        <form className={classes.modal} onSubmit={addInformation}>
+          <div>
+            <TextField
+              id="outlined-textarea"
+              label="Company Name"
+              defaultValue={currentjob.companyName}
+              multiline
+              variant="outlined"
+              onChange={(e) => setCName(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField
+              id="outlined-textarea"
+              label="Job Title"
+              defaultValue={currentjob.jobTitle}
+              multiline
+              variant="outlined"
+              onChange={(e) => setJTitle(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField
+              id="outlined-textarea"
+              label="Company Description"
+              defaultValue={currentjob.description}
+              multiline
+              variant="outlined"
+              onChange={(e) => setJDescription(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField
+              id="outlined-textarea"
+              label="Application link"
+              defaultValue={currentjob.appLink}
+              multiline
+              variant="outlined"
+              onChange={(e) => setAlink(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField
+              id="outlined-textarea"
+              label="Notes"
+              defaultValue={currentjob.notes}
+              multiline
+              variant="outlined"
+              onChange={(e) => setJnotes(e.target.value)}
+            />
+          </div>
+          <Button
+            className={classes.modalButton}
+            variant="contained"
+            color="primary"
+            size="small"
+            type="submit"
+          >
+            Apply
+          </Button>
+          <Button
+            className={classes.modalButton}
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+        </form>
+      </div>
+    );
+  };
 
   async function editData(packet, id) {
     axios.patch(`http://localhost:8000/api/job/${id}`, packet).then(
@@ -289,68 +314,144 @@ function Homepage(props) {
         setJnotes("");
         return item;
       }
-      return item;
     });
 
-    editData(editJobs[0], editJobs[0]._id);
+    // editData(editJobs[0], editJobs[0]._id);
 
     // setJobData(editJobs); // Modifying the state in this current component
   };
 
- 
-
-  const getButtons = (status) => {
-    
-    if(status === 'Applied'){
-      return <div>
-              <IconButton>
-                <PeopleAltIcon />
-              </IconButton>
-              <IconButton>
-                <StarsIcon />
-              </IconButton>
-              <IconButton>
-                <NewReleasesIcon />
-              </IconButton>
-            </div>;
-    }else if(status === 'Interview'){
-      return <div>
-              <IconButton>
-                <BookmarksIcon />
-              </IconButton>
-              <IconButton>
-                <StarsIcon />
-              </IconButton>
-              <IconButton>
-                <NewReleasesIcon />
-              </IconButton>
-            </div>;
-    }else if(status === 'Accept'){
-      return <div>
-              <IconButton>
-                <BookmarksIcon />
-              </IconButton>
-              <IconButton>
-                <PeopleAltIcon />
-              </IconButton>
-              <IconButton>
-                <NewReleasesIcon />
-              </IconButton>
-            </div>;
-    }else{
-      return <div>
-              <IconButton>
-                <BookmarksIcon />
-              </IconButton>
-              <IconButton>
-                <PeopleAltIcon />
-              </IconButton>
-              <IconButton>
-                <StarsIcon />
-              </IconButton>
-            </div>;
+  const getButtons = (status, job) => {
+    if (status === "Applied") {
+      return (
+        <div>
+          <LightTooltip title="Inteview">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Interview");
+              }}
+            >
+              <PeopleAltIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Accept">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Accept");
+              }}
+            >
+              <StarsIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Reject">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Reject");
+              }}
+            >
+              <NewReleasesIcon />
+            </IconButton>
+          </LightTooltip>
+        </div>
+      );
+    } else if (status === "Interview") {
+      return (
+        <div>
+          <LightTooltip title="Applied">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Applied");
+              }}
+            >
+              <BookmarksIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Accept">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Accept");
+              }}
+            >
+              <StarsIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Reject">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Reject");
+              }}
+            >
+              <NewReleasesIcon />
+            </IconButton>
+          </LightTooltip>
+        </div>
+      );
+    } else if (status === "Accept") {
+      return (
+        <div>
+          <LightTooltip title="Applied">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Applied");
+              }}
+            >
+              <BookmarksIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Inteview">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Interview");
+              }}
+            >
+              <PeopleAltIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Reject">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Reject");
+              }}
+            >
+              <NewReleasesIcon />
+            </IconButton>
+          </LightTooltip>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <LightTooltip title="Applied">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Applied");
+              }}
+            >
+              <BookmarksIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Inteview">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Interview");
+              }}
+            >
+              <PeopleAltIcon />
+            </IconButton>
+          </LightTooltip>
+          <LightTooltip title="Accept">
+            <IconButton
+              onClick={() => {
+                updateStatus(job, "Accept");
+              }}
+            >
+              <StarsIcon />
+            </IconButton>
+          </LightTooltip>
+        </div>
+      );
     }
-  }
+  };
   const displayJobs = (s) => {
     // return jobData
     return gridJobData
@@ -370,14 +471,16 @@ function Homepage(props) {
               }
               action={
                 <div>
-                  <IconButton
-                    aria-label="settings"
-                    aria-controls="simple-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
+                  <LightTooltip title="Edit">
+                    <IconButton
+                      aria-label="settings"
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      onClick={handleClick}
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </LightTooltip>
 
                   <Menu
                     id="simple-menu"
@@ -386,7 +489,11 @@ function Homepage(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleCloseTwo}
                   >
-                    <MenuItem onClick={() => handleOpen(job)}>
+                    <MenuItem
+                      onClick={() => {
+                        handleOpen(job);
+                      }}
+                    >
                       <EditIcon
                         fontSize="small"
                         marginleft="10px"
@@ -414,7 +521,7 @@ function Homepage(props) {
                     aria-describedby="simple-modal-description"
                     animation="false"
                   >
-                    {editCard}
+                    {editCard()}
                   </Modal>
                 </div>
               }
@@ -425,20 +532,22 @@ function Homepage(props) {
             />
 
             <CardActions>
-              {getButtons(s.status)}
-              <IconButton
-                // style={{ edge: "end" }}
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: activeIndex === index,
-                })}
-                onClick={() => {
-                  setActiveIndex(activeIndex === index ? null : index);
-                }}
-                aria-expanded={activeIndex === index}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </IconButton>
+              {getButtons(s.status, job)}
+              <LightTooltip title="More Details">
+                <IconButton
+                  // style={{ edge: "end" }}
+                  className={clsx(classes.expand, {
+                    [classes.expandOpen]: activeIndex === index,
+                  })}
+                  onClick={() => {
+                    setActiveIndex(activeIndex === index ? null : index);
+                  }}
+                  aria-expanded={activeIndex === index}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon />
+                </IconButton>
+              </LightTooltip>
             </CardActions>
 
             <Collapse in={activeIndex === index} timeout="auto" unmountOnExit>
@@ -474,7 +583,11 @@ function Homepage(props) {
               }}
               key={idx}
             >
-              <AppliedComponent status={s.status} icon={s.svgIcon} getData={setGridJobData} />
+              <AppliedComponent
+                status={s.status}
+                icon={s.svgIcon}
+                getData={setGridJobData}
+              />
               {/* {jobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null} */}
               {gridJobData.length > 0 ? <ul>{displayJobs(s)}</ul> : null}
             </Grid>
