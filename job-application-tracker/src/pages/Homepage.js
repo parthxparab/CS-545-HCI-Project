@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import AppliedComponent from '../Components/AppliedComponent';
 import clsx from 'clsx';
@@ -277,10 +277,11 @@ function Homepage(props) {
 				>
 					Apply
 				</Button>
-				<Button onClick={() => {
-					handleClose();
-					handleCloseTwo();
-				}}
+				<Button
+					onClick={() => {
+						handleClose();
+						handleCloseTwo();
+					}}
 					className={classes.modalButton}
 					variant='contained'
 					color='primary'
@@ -461,7 +462,6 @@ function Homepage(props) {
 		}
 	};
 
-
 	const handleWarningOpen = () => {
 		setOpenWarning(true);
 	};
@@ -472,32 +472,33 @@ function Homepage(props) {
 
 	const deleteWarning = (
 		<div style={modalStyle} className={classes.paper}>
-			<h2 id="simple-modal-title">Are you sure you want to permanently delete?</h2>
+			<h2 id='simple-modal-title'>
+				Are you sure you want to permanently delete?
+			</h2>
 			<Button
 				onClick={() => {
 					deleteJob(currentjob);
 				}}
-
-				variant="contained"
-				color="secondary"
+				variant='contained'
+				color='secondary'
 				className={classes.button}
 				startIcon={<DeleteIcon />}
 			>
 				Delete
-      </Button>
-			<Button onClick={() => {
-				handleWarningClose();
-				handleCloseTwo();
-			}}
-				variant="contained"
-				color="secondary"
+			</Button>
+			<Button
+				onClick={() => {
+					handleWarningClose();
+					handleCloseTwo();
+				}}
+				variant='contained'
+				color='secondary'
 				className={classes.button}
 				startIcon={<CancelIcon />}
 			>
 				Cancel
-      </Button>
+			</Button>
 		</div>
-
 	);
 
 	const displayJobs = (s) => {
@@ -545,10 +546,11 @@ function Homepage(props) {
 											/>
 											Edit
 										</MenuItem>
-										<MenuItem onClick={(handleWarningOpen)}
-										// onClick={() => {
-										// 	deleteJob(currentjob);
-										// }}
+										<MenuItem
+											onClick={handleWarningOpen}
+											// onClick={() => {
+											// 	deleteJob(currentjob);
+											// }}
 										>
 											<DeleteIcon
 												fontSize='small'
@@ -563,7 +565,8 @@ function Homepage(props) {
 										onClose={handleWarningClose}
 										aria-labelledby='simple-modal-title'
 										aria-describedby='simple-modal-description'
-										animation='false'>
+										animation='false'
+									>
 										{deleteWarning}
 									</Modal>
 									<Modal
