@@ -2,11 +2,23 @@ import React from "react";
 import Modal from "@material-ui/core/Modal";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import BookmarksIcon from "@material-ui/icons/Bookmarks";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import StarsIcon from "@material-ui/icons/Stars";
+import NewReleasesIcon from "@material-ui/icons/NewReleases";
 import axios from "axios";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // import JobCard from "./JobCard";
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: "rgba(0, 0, 0, 0.87)",
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -194,19 +206,34 @@ export default function AppliedComponent(props) {
     </div>
   );
 
+  // const getIcon = (props.status==='Applied'?<BookmarksIcon/>:(props.status==='Interview'?<PeopleAltIcon/>:(props.status==='Accept'?<StarsIcon/>:<NewReleasesIcon/>)))
+  var getIcon;
+  if (props.status === "Applied") {
+    getIcon = <BookmarksIcon />;
+  } else if (props.status === "Interview") {
+    getIcon = <PeopleAltIcon />;
+  } else if (props.status === "Accept") {
+    getIcon = <StarsIcon />;
+  } else {
+    getIcon = <NewReleasesIcon />;
+  }
   return (
     <div className="OuterBody">
       <div className="InnerBody">
-        <h1>{props.status}</h1>
-        <Button
-          className={classes.button}
-          variant="contained"
-          size="medium"
-          type="button"
-          onClick={handleOpen}
-        >
-          +
-        </Button>
+        <h1>
+          {props.status} {getIcon}{" "}
+        </h1>
+        <LightTooltip title="Add new job">
+          <Button
+            className={classes.button}
+            variant="contained"
+            size="medium"
+            type="button"
+            onClick={handleOpen}
+          >
+            +
+          </Button>
+        </LightTooltip>
 
         <Modal
           open={open}
