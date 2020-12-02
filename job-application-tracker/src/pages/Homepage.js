@@ -26,6 +26,7 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 const LightTooltip = withStyles((theme) => ({
 	tooltip: {
@@ -92,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
 	modalButton: {
 		margin: 16,
 	},
+	button: {
+		margin: theme.spacing(1),
+	},
 }));
 
 const statuses = [
@@ -126,6 +130,7 @@ function Homepage(props) {
 	const [gridJobData, setGridJobData] = useState([]);
 	const [jNotes, setJnotes] = React.useState('');
 	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [openWarning, setOpenWarning] = React.useState(false);
 
 	useEffect(() => {
 		console.log('render');
@@ -166,6 +171,8 @@ function Homepage(props) {
 				console.log(error);
 			}
 		);
+		handleWarningClose();
+		handleCloseTwo();
 	};
 
 	const updateStatus = async (job, status) => {
@@ -270,12 +277,14 @@ function Homepage(props) {
 				>
 					Apply
 				</Button>
-				<Button
+				<Button onClick={() => {
+					handleClose();
+					handleCloseTwo();
+				}}
 					className={classes.modalButton}
 					variant='contained'
 					color='primary'
 					size='small'
-					onClick={handleClose}
 				>
 					Cancel
 				</Button>
@@ -295,6 +304,7 @@ function Homepage(props) {
 				console.log(error);
 			}
 		);
+		handleCloseTwo();
 	}
 
 	const updateJobCard = () => {
@@ -450,6 +460,46 @@ function Homepage(props) {
 			);
 		}
 	};
+
+
+	const handleWarningOpen = () => {
+		setOpenWarning(true);
+	};
+
+	const handleWarningClose = () => {
+		setOpenWarning(false);
+	};
+
+	const deleteWarning = (
+		<div style={modalStyle} className={classes.paper}>
+			<h2 id="simple-modal-title">Are you sure you want to permanently delete?</h2>
+			<Button
+				onClick={() => {
+					deleteJob(currentjob);
+				}}
+
+				variant="contained"
+				color="secondary"
+				className={classes.button}
+				startIcon={<DeleteIcon />}
+			>
+				Delete
+      </Button>
+			<Button onClick={() => {
+				handleWarningClose();
+				handleCloseTwo();
+			}}
+				variant="contained"
+				color="secondary"
+				className={classes.button}
+				startIcon={<CancelIcon />}
+			>
+				Cancel
+      </Button>
+		</div>
+
+	);
+
 	const displayJobs = (s) => {
 		// return jobData
 		return gridJobData
@@ -495,10 +545,10 @@ function Homepage(props) {
 											/>
 											Edit
 										</MenuItem>
-										<MenuItem
-											onClick={() => {
-												deleteJob(currentjob);
-											}}
+										<MenuItem onClick={(handleWarningOpen)}
+										// onClick={() => {
+										// 	deleteJob(currentjob);
+										// }}
 										>
 											<DeleteIcon
 												fontSize='small'
@@ -508,6 +558,14 @@ function Homepage(props) {
 											Delete
 										</MenuItem>{' '}
 									</Menu>
+									<Modal
+										open={openWarning}
+										onClose={handleWarningClose}
+										aria-labelledby='simple-modal-title'
+										aria-describedby='simple-modal-description'
+										animation='false'>
+										{deleteWarning}
+									</Modal>
 									<Modal
 										open={open}
 										onClose={handleClose}
