@@ -2,11 +2,21 @@ import React from 'react';
 import './App.css';
 import Header from './Components/Header';
 import Homepage from './pages/Homepage';
-import Help from './Components/Help';
+import Help from './pages/Help';
+import AboutUs from './pages/AboutUs';
 
 function App(props) {
-	const [renderOpen, setRenderOpen] = React.useState('');
-	console.log(renderOpen);
+	const [renderOpen, setRenderOpen] = React.useState('Home');
+
+	const getPage = () => {
+		if (renderOpen === 'Home') {
+			return <Homepage />;
+		} else if (renderOpen === 'Help') {
+			return <Help />;
+		} else if (renderOpen === 'AboutUs') {
+			return <AboutUs />;
+		}
+	};
 
 	return (
 		<div className='Outerbody'>
@@ -15,7 +25,7 @@ function App(props) {
 			<br />
 			<br />
 			<br />
-			{renderOpen === 'Help' ? <Help /> : <Homepage />}
+			{getPage()}
 		</div>
 	);
 }

@@ -592,12 +592,12 @@ function Homepage(props) {
 								<IconButton
 									// style={{ edge: "end" }}
 									className={clsx(classes.expand, {
-										[classes.expandOpen]: activeIndex === index,
+										[classes.expandOpen]: activeIndex === job._id,
 									})}
 									onClick={() => {
-										setActiveIndex(activeIndex === index ? null : index);
+										setActiveIndex(activeIndex === job._id ? null : job._id);
 									}}
-									aria-expanded={activeIndex === index}
+									aria-expanded={activeIndex === job._id}
 									aria-label='show more'
 								>
 									<ExpandMoreIcon />
@@ -605,7 +605,7 @@ function Homepage(props) {
 							</LightTooltip>
 						</CardActions>
 
-						<Collapse in={activeIndex === index} timeout='auto' unmountOnExit>
+						<Collapse in={activeIndex === job._id} timeout='auto' unmountOnExit>
 							<CardContent>
 								<Typography variant='body2' component='p' align='left'>
 									Job description: {job.description}

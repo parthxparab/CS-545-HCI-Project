@@ -41,51 +41,51 @@ function Header(props) {
   const { setOpen } = props;
   const classes = useStyles();
 
-  return (
-    <div>
-      <AppBar className={classes.bar}>
-        <Toolbar>
-          <Typography variant="h2" className={classes.title}>
-            Trace
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <Button
-              onClick={() => {
-                setOpen("HomePage");
-              }}
-              variant="contained"
-              className={classes.button}
-              startIcon={<HomeIcon />}
-            >
-              Home
-            </Button>
-            <Button
-              onClick={() => {
-                setOpen("Help");
-              }}
-              variant="contained"
-              className={classes.button}
-              startIcon={<HelpIcon />}
-            >
-              Help
-            </Button>
-            <Button
-              onClick={() => {
-                setOpen("About");
-              }}
-              variant="contained"
-              className={classes.button}
-              startIcon={<InfoIcon />}
-            >
-              About Us
-            </Button>
-          </div>
-          <div className={classes.sectionMobile}></div>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+	return (
+		<div>
+			<AppBar className={classes.bar}>
+				<Toolbar>
+					<Typography variant='h2' className={classes.title}>
+						Application Tracker
+					</Typography>
+					<div className={classes.grow} />
+					<div className={classes.sectionDesktop}>
+						<Button
+							onClick={() => {
+								setOpen('Home');
+							}}
+							variant='contained'
+							className={classes.button}
+							startIcon={<HomeIcon />}
+						>
+							Home
+						</Button>
+						<Button
+							onClick={() => {
+								setOpen('Help');
+							}}
+							variant='contained'
+							className={classes.button}
+							startIcon={<HelpIcon />}
+						>
+							Help
+						</Button>
+						<Button
+							onClick={() => {
+								setOpen('AboutUs');
+							}}
+							variant='contained'
+							className={classes.button}
+							startIcon={<InfoIcon />}
+						>
+							About Us
+						</Button>
+					</div>
+					<div className={classes.sectionMobile}></div>
+				</Toolbar>
+			</AppBar>
+		</div>
+	);
 }
 
 export default Header;
