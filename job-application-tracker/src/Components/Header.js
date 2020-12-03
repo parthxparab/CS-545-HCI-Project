@@ -52,7 +52,7 @@ function Header(props) {
 					<div className={classes.sectionDesktop}>
 						<Button
 							onClick={() => {
-								setOpen('HomePage');
+								setOpen('Home');
 							}}
 							variant='contained'
 							className={classes.button}
@@ -72,7 +72,7 @@ function Header(props) {
 						</Button>
 						<Button
 							onClick={() => {
-								setOpen('About');
+								setOpen('AboutUs');
 							}}
 							variant='contained'
 							className={classes.button}
