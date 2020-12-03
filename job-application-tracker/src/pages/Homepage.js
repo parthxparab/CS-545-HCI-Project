@@ -1,39 +1,39 @@
-import React, { useState, useEffect } from "react";
-import Grid from "@material-ui/core/Grid";
-import AppliedComponent from "../Components/AppliedComponent";
-import clsx from "clsx";
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardContent from "@material-ui/core/CardContent";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import EditIcon from "@material-ui/icons/Edit";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Modal from "@material-ui/core/Modal";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import BookmarksIcon from "@material-ui/icons/Bookmarks";
-import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
-import StarsIcon from "@material-ui/icons/Stars";
-import NewReleasesIcon from "@material-ui/icons/NewReleases";
-import axios from "axios";
-import Tooltip from "@material-ui/core/Tooltip";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import CancelIcon from "@material-ui/icons/Cancel";
+import React, { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid';
+import AppliedComponent from '../Components/AppliedComponent';
+import clsx from 'clsx';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import EditIcon from '@material-ui/icons/Edit';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Modal from '@material-ui/core/Modal';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import BookmarksIcon from '@material-ui/icons/Bookmarks';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import StarsIcon from '@material-ui/icons/Stars';
+import NewReleasesIcon from '@material-ui/icons/NewReleases';
+import axios from 'axios';
+import Tooltip from '@material-ui/core/Tooltip';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import CancelIcon from '@material-ui/icons/Cancel';
 
-import moment from "moment";
+import moment from 'moment';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
     backgroundColor: theme.palette.common.white,
-    color: "rgba(0, 0, 0, 0.87)",
+    color: 'rgba(0, 0, 0, 0.87)',
     boxShadow: theme.shadows[1],
     fontSize: 11,
   },
@@ -56,38 +56,38 @@ function getModalStyle() {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: "4px",
+    margin: '4px',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: '56.25%', // 16:9
   },
   expand: {
-    transform: "rotate(0deg)",
-    transition: theme.transitions.create("transform", {
+    transform: 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
     }),
   },
   expandOpen: {
-    transform: "rotate(180deg)",
+    transform: 'rotate(180deg)',
   },
   avatar: {
-    backgroundColor: "#ede1d4",
-    color: "#2e3338",
+    backgroundColor: '#ede1d4',
+    color: '#2e3338',
   },
   paper: {
-    position: "absolute",
+    position: 'absolute',
     width: 400,
     backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     marginRight: theme.spacing(2),
   },
   modal: {
-    "& .MuiTextField-root": {
+    '& .MuiTextField-root': {
       margin: theme.spacing(1),
       width: 200,
     },
@@ -102,20 +102,20 @@ const useStyles = makeStyles((theme) => ({
 
 const statuses = [
   {
-    status: "Applied",
-    cardColor: "#99ea9b",
+    status: 'Applied',
+    cardColor: '#99ea9b',
   },
   {
-    status: "Interview",
-    cardColor: "#79e27b",
+    status: 'Interview',
+    cardColor: '#79e27b',
   },
   {
-    status: "Accept",
-    cardColor: "#58da5a",
+    status: 'Accept',
+    cardColor: '#58da5a',
   },
   {
-    status: "Reject",
-    cardColor: "#f1856a",
+    status: 'Reject',
+    cardColor: '#f1856a',
   },
 ];
 
@@ -124,26 +124,26 @@ function Homepage(props) {
   const [open, setOpen] = React.useState(false);
   const [activeIndex, setActiveIndex] = React.useState(null);
   const [currentjob, setCurrentJob] = React.useState({});
-  const [cName, setCName] = React.useState("");
-  const [jTitle, setJTitle] = React.useState("");
-  const [jDescription, setJDescription] = React.useState("");
-  const [aLink, setAlink] = React.useState("");
+  const [cName, setCName] = React.useState('');
+  const [jTitle, setJTitle] = React.useState('');
+  const [jDescription, setJDescription] = React.useState('');
+  const [aLink, setAlink] = React.useState('');
   const [modalStyle] = React.useState(getModalStyle);
   const [gridJobData, setGridJobData] = useState([]);
-  const [jNotes, setJnotes] = React.useState("");
+  const [jNotes, setJnotes] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openWarning, setOpenWarning] = React.useState(false);
   const [currentDate, setCurrentDate] = React.useState(false);
 
   useEffect(() => {
-    console.log("render");
+    console.log('render');
     async function fetchData() {
       try {
-        axios.get("http://localhost:8000/api/job").then((response) => {
+        axios.get('http://localhost:8000/api/job').then((response) => {
           setGridJobData(response.data);
         });
 
-        var date = moment().format(" MMM DD YYYY");
+        var date = moment().format(' MMM DD YYYY');
         setCurrentDate(date);
       } catch (e) {
         console.log(e);
@@ -166,10 +166,10 @@ function Homepage(props) {
   };
 
   const deleteJob = async (job) => {
-    axios.delete("http://localhost:8000/api/job/" + String(job._id)).then(
+    axios.delete('http://localhost:8000/api/job/' + String(job._id)).then(
       (response) => {
         console.log(response.data);
-        axios.get("http://localhost:8000/api/job").then((response) => {
+        axios.get('http://localhost:8000/api/job').then((response) => {
           setGridJobData(response.data);
         });
       },
@@ -185,14 +185,14 @@ function Homepage(props) {
     console.log(job);
     let packet = {
       status: status,
-      timeStamp: "Nov 21, 2020",
+      timeStamp: 'Nov 21, 2020',
     };
     axios
-      .patch("http://localhost:8000/api/job/status/" + String(job._id), packet)
+      .patch('http://localhost:8000/api/job/status/' + String(job._id), packet)
       .then(
         (response) => {
           console.log(response.data);
-          axios.get("http://localhost:8000/api/job").then((response) => {
+          axios.get('http://localhost:8000/api/job').then((response) => {
             setGridJobData(response.data);
           });
         },
@@ -203,10 +203,10 @@ function Homepage(props) {
   };
 
   const addInformation = (e) => {
-    if (cName !== "" || jTitle !== "" || jDescription !== "" || aLink !== "") {
+    if (cName !== '' || jTitle !== '' || jDescription !== '' || aLink !== '') {
       updateJobCard();
     } else {
-      alert("Please enter all details!");
+      alert('Please enter all details!');
     }
 
     handleClose();
@@ -216,7 +216,7 @@ function Homepage(props) {
   };
 
   const handleClick = (job) => (event) => {
-    console.log("handleClick called! job: ", job);
+    console.log('handleClick called! job: ', job);
     setCurrentJob(job);
     setAnchorEl(event.currentTarget);
   };
@@ -226,60 +226,60 @@ function Homepage(props) {
       <form className={classes.modal} onSubmit={addInformation}>
         <div>
           <TextField
-            id="outlined-textarea"
-            label="Company Name"
+            id='outlined-textarea'
+            label='Company Name'
             defaultValue={currentjob.companyName}
             multiline
-            variant="outlined"
+            variant='outlined'
             onChange={(e) => setCName(e.target.value)}
           />
         </div>
         <div>
           <TextField
-            id="outlined-textarea"
-            label="Job Title"
+            id='outlined-textarea'
+            label='Job Title'
             defaultValue={currentjob.jobTitle}
             multiline
-            variant="outlined"
+            variant='outlined'
             onChange={(e) => setJTitle(e.target.value)}
           />
         </div>
         <div>
           <TextField
-            id="outlined-textarea"
-            label="Company Description"
+            id='outlined-textarea'
+            label='Company Description'
             defaultValue={currentjob.description}
             multiline
-            variant="outlined"
+            variant='outlined'
             onChange={(e) => setJDescription(e.target.value)}
           />
         </div>
         <div>
           <TextField
-            id="outlined-textarea"
-            label="Application link"
+            id='outlined-textarea'
+            label='Application link'
             defaultValue={currentjob.appLink}
             multiline
-            variant="outlined"
+            variant='outlined'
             onChange={(e) => setAlink(e.target.value)}
           />
         </div>
         <div>
           <TextField
-            id="outlined-textarea"
-            label="Notes"
+            id='outlined-textarea'
+            label='Notes'
             defaultValue={currentjob.notes}
             multiline
-            variant="outlined"
+            variant='outlined'
             onChange={(e) => setJnotes(e.target.value)}
           />
         </div>
         <Button
           className={classes.modalButton}
-          variant="contained"
-          color="primary"
-          size="small"
-          type="submit"
+          variant='contained'
+          color='primary'
+          size='small'
+          type='submit'
         >
           Apply
         </Button>
@@ -289,9 +289,9 @@ function Homepage(props) {
             handleCloseTwo();
           }}
           className={classes.modalButton}
-          variant="contained"
-          color="primary"
-          size="small"
+          variant='contained'
+          color='primary'
+          size='small'
         >
           Cancel
         </Button>
@@ -303,7 +303,7 @@ function Homepage(props) {
     axios.patch(`http://localhost:8000/api/job/${id}`, packet).then(
       (response) => {
         console.log(response.data);
-        axios.get("http://localhost:8000/api/job").then((response) => {
+        axios.get('http://localhost:8000/api/job').then((response) => {
           setGridJobData(response.data);
         });
       },
@@ -324,11 +324,11 @@ function Homepage(props) {
           jDescription.length > 0 ? jDescription : currentjob.description;
         item.appLink = aLink.length > 0 ? aLink : currentjob.appLink;
         item.notes = jNotes.length > 0 ? jNotes : currentjob.notes;
-        setCName("");
-        setJTitle("");
-        setJDescription("");
-        setAlink("");
-        setJnotes("");
+        setCName('');
+        setJTitle('');
+        setJDescription('');
+        setAlink('');
+        setJnotes('');
         return item;
       }
     });
@@ -337,31 +337,31 @@ function Homepage(props) {
   };
 
   const getButtons = (status, job) => {
-    if (status === "Applied") {
+    if (status === 'Applied') {
       return (
         <div>
-          <LightTooltip title="Inteview">
+          <LightTooltip title='Inteview'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Interview");
+                updateStatus(job, 'Interview');
               }}
             >
               <PeopleAltIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Accept">
+          <LightTooltip title='Accept'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Accept");
+                updateStatus(job, 'Accept');
               }}
             >
               <StarsIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Reject">
+          <LightTooltip title='Reject'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Reject");
+                updateStatus(job, 'Reject');
               }}
             >
               <NewReleasesIcon />
@@ -369,31 +369,31 @@ function Homepage(props) {
           </LightTooltip>
         </div>
       );
-    } else if (status === "Interview") {
+    } else if (status === 'Interview') {
       return (
         <div>
-          <LightTooltip title="Applied">
+          <LightTooltip title='Applied'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Applied");
+                updateStatus(job, 'Applied');
               }}
             >
               <BookmarksIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Accept">
+          <LightTooltip title='Accept'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Accept");
+                updateStatus(job, 'Accept');
               }}
             >
               <StarsIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Reject">
+          <LightTooltip title='Reject'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Reject");
+                updateStatus(job, 'Reject');
               }}
             >
               <NewReleasesIcon />
@@ -401,31 +401,31 @@ function Homepage(props) {
           </LightTooltip>
         </div>
       );
-    } else if (status === "Accept") {
+    } else if (status === 'Accept') {
       return (
         <div>
-          <LightTooltip title="Applied">
+          <LightTooltip title='Applied'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Applied");
+                updateStatus(job, 'Applied');
               }}
             >
               <BookmarksIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Inteview">
+          <LightTooltip title='Inteview'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Interview");
+                updateStatus(job, 'Interview');
               }}
             >
               <PeopleAltIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Reject">
+          <LightTooltip title='Reject'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Reject");
+                updateStatus(job, 'Reject');
               }}
             >
               <NewReleasesIcon />
@@ -436,28 +436,28 @@ function Homepage(props) {
     } else {
       return (
         <div>
-          <LightTooltip title="Applied">
+          <LightTooltip title='Applied'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Applied");
+                updateStatus(job, 'Applied');
               }}
             >
               <BookmarksIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Inteview">
+          <LightTooltip title='Inteview'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Interview");
+                updateStatus(job, 'Interview');
               }}
             >
               <PeopleAltIcon />
             </IconButton>
           </LightTooltip>
-          <LightTooltip title="Accept">
+          <LightTooltip title='Accept'>
             <IconButton
               onClick={() => {
-                updateStatus(job, "Accept");
+                updateStatus(job, 'Accept');
               }}
             >
               <StarsIcon />
@@ -478,15 +478,15 @@ function Homepage(props) {
 
   const deleteWarning = (
     <div style={modalStyle} className={classes.paper}>
-      <h2 id="simple-modal-title">
+      <h2 id='simple-modal-title'>
         Are you sure you want to permanently delete?
       </h2>
       <Button
         onClick={() => {
           deleteJob(currentjob);
         }}
-        variant="contained"
-        color="secondary"
+        variant='contained'
+        color='secondary'
         className={classes.button}
         startIcon={<DeleteIcon />}
       >
@@ -497,8 +497,8 @@ function Homepage(props) {
           handleWarningClose();
           handleCloseTwo();
         }}
-        variant="contained"
-        color="secondary"
+        variant='contained'
+        color='secondary'
         className={classes.button}
         startIcon={<CancelIcon />}
       >
@@ -520,17 +520,17 @@ function Homepage(props) {
           >
             <CardHeader
               avatar={
-                <Avatar aria-label="recipe" className={classes.avatar}>
+                <Avatar aria-label='recipe' className={classes.avatar}>
                   {job.companyName[0]}
                 </Avatar>
               }
               action={
                 <div>
-                  <LightTooltip title="Edit">
+                  <LightTooltip title='Edit'>
                     <IconButton
-                      aria-label="settings"
-                      aria-controls="simple-menu"
-                      aria-haspopup="true"
+                      aria-label='settings'
+                      aria-controls='simple-menu'
+                      aria-haspopup='true'
                       onClick={handleClick(job)}
                     >
                       <MoreVertIcon />
@@ -538,7 +538,7 @@ function Homepage(props) {
                   </LightTooltip>
 
                   <Menu
-                    id="simple-menu"
+                    id='simple-menu'
                     anchorEl={anchorEl}
                     keepMounted
                     open={Boolean(anchorEl)}
@@ -546,9 +546,9 @@ function Homepage(props) {
                   >
                     <MenuItem onClick={handleOpen}>
                       <EditIcon
-                        fontSize="small"
-                        marginleft="10px"
-                        style={{ marginRight: "2px" }}
+                        fontSize='small'
+                        marginleft='10px'
+                        style={{ marginRight: '2px' }}
                       />
                       Edit
                     </MenuItem>
@@ -559,42 +559,42 @@ function Homepage(props) {
                       // }}
                     >
                       <DeleteIcon
-                        fontSize="small"
-                        marginleft="10px"
-                        style={{ marginRight: "2px" }}
+                        fontSize='small'
+                        marginleft='10px'
+                        style={{ marginRight: '2px' }}
                       />
                       Delete
-                    </MenuItem>{" "}
+                    </MenuItem>{' '}
                   </Menu>
                   <Modal
                     open={openWarning}
                     onClose={handleWarningClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    animation="false"
+                    aria-labelledby='simple-modal-title'
+                    aria-describedby='simple-modal-description'
+                    animation='false'
                   >
                     {deleteWarning}
                   </Modal>
                   <Modal
                     open={open}
                     onClose={handleClose}
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    animation="false"
+                    aria-labelledby='simple-modal-title'
+                    aria-describedby='simple-modal-description'
+                    animation='false'
                   >
                     {editCard}
                   </Modal>
                 </div>
               }
               title={job.companyName}
-              titleTypographyProps={{ variant: "h6" }}
+              titleTypographyProps={{ variant: 'h6' }}
               subheader={job.jobTitle}
-              align="left"
+              align='left'
             />
 
             <CardActions>
               {getButtons(s.status, job)}
-              <LightTooltip title="More Details">
+              <LightTooltip title='More Details'>
                 <IconButton
                   // style={{ edge: "end" }}
                   className={clsx(classes.expand, {
@@ -604,7 +604,7 @@ function Homepage(props) {
                     setActiveIndex(activeIndex === job._id ? null : job._id);
                   }}
                   aria-expanded={activeIndex === job._id}
-                  aria-label="show more"
+                  aria-label='show more'
                 >
                   <ExpandMoreIcon />
                 </IconButton>
@@ -612,13 +612,13 @@ function Homepage(props) {
             </CardActions>
             <div>{currentDate}</div>
 
-            <Collapse in={activeIndex === job._id} timeout="auto" unmountOnExit>
+            <Collapse in={activeIndex === job._id} timeout='auto' unmountOnExit>
               <CardContent>
-                <Typography variant="body2" component="p" align="left">
+                <Typography variant='body2' component='p' align='left'>
                   Job description: {job.description}
                 </Typography>
 
-                <Typography variant="body2" component="p" align="left">
+                <Typography variant='body2' component='p' align='left'>
                   Job link: {job.appLink}
                 </Typography>
                 <Typography paragraph>Notes: {job.notes}</Typography>
@@ -638,10 +638,10 @@ function Homepage(props) {
               item
               xs={3}
               style={{
-                height: "100vh",
-                boxShadow: "1px 3px 1px #9E9E9E",
-                padding: "6px",
-                backgroundColor: "#f8f8f8",
+                height: '100vh',
+                boxShadow: '1px 3px 1px #9E9E9E',
+                padding: '6px',
+                backgroundColor: '#f8f8f8',
               }}
               key={idx}
             >
