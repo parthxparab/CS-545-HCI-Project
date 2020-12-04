@@ -271,7 +271,7 @@ export default function AppliedComponent(props) {
       <Snackbar
         style={{ width: '100%', padding: 0, margin: 0 }}
         open={openSnack}
-        autoHideDuration={6000}
+        autoHideDuration={2500}
         onClose={handleCloseSnack}
       >
         <Alert onClose={handleCloseSnack} severity='success'>
