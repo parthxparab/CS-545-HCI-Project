@@ -27,6 +27,7 @@ import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Box from '@material-ui/core/Box';
 
 const LightTooltip = withStyles((theme) => ({
 	tooltip: {
@@ -548,9 +549,9 @@ function Homepage(props) {
 										</MenuItem>
 										<MenuItem
 											onClick={handleWarningOpen}
-											// onClick={() => {
-											// 	deleteJob(currentjob);
-											// }}
+										// onClick={() => {
+										// 	deleteJob(currentjob);
+										// }}
 										>
 											<DeleteIcon
 												fontSize='small'
@@ -608,13 +609,38 @@ function Homepage(props) {
 						<Collapse in={activeIndex === job._id} timeout='auto' unmountOnExit>
 							<CardContent>
 								<Typography variant='body2' component='p' align='left'>
-									Job description: {job.description}
+									<Box fontWeight="fontWeightBold" m={1}>
+										Job description
+								</Box>
+
+								</Typography>
+								<Typography variant='body2' align='left'>
+									<Box fontWeight="fontWeightRegular" m={1}>
+										{job.description}
+									</Box>
 								</Typography>
 
 								<Typography variant='body2' component='p' align='left'>
-									Job link: {job.appLink}
+									<Box fontWeight="fontWeightBold" m={1}>
+										Job link
+								</Box>
 								</Typography>
-								<Typography paragraph>Notes: {job.notes}</Typography>
+								<Typography variant='body2' align='left'>
+									<Box fontWeight="fontWeightRegular" m={1}>
+										{job.appLink}
+									</Box>
+								</Typography>
+
+								<Typography variant='body2' component='p' align='left'>
+									<Box fontWeight="fontWeightBold" m={1} >
+										Notes
+								</Box>
+								</Typography>
+								<Typography variant='body2' align='left'>
+									<Box fontWeight="fontWeightRegular" m={1}>
+										{job.notes}
+									</Box>
+								</Typography>
 							</CardContent>
 						</Collapse>
 					</Card>
@@ -654,3 +680,6 @@ function Homepage(props) {
 }
 
 export default Homepage;
+
+
+
