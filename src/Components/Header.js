@@ -60,7 +60,7 @@ function Header(props) {
 							fontFamily='"Helvetica Neue"'
 							m={1}
 						>
-							TRACER
+							TRACE
 						</Box>
 					</Button>
 
