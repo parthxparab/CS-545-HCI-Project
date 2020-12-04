@@ -373,24 +373,24 @@ function Homepage(props) {
   }
 
   const updateJobCard = () => {
-    // let editJobs = gridJobData;
-    // editJobs = editJobs.map((item) => {
-    // 	if (item === currentjob) {
-    // 		item.companyName = cName.length > 0 ? cName : currentjob.companyName;
-    // 		item.jobTitle = jTitle.length > 0 ? jTitle : currentjob.jobTitle;
-    // 		item.description =
-    // 			jDescription.length > 0 ? jDescription : currentjob.description;
-    // 		item.appLink = aLink.length > 0 ? aLink : currentjob.appLink;
-    // 		item.notes = jNotes.length > 0 ? jNotes : currentjob.notes;
-    // 		setCName('');
-    // 		setJTitle('');
-    // 		setJDescription('');
-    // 		setAlink('');
-    // 		setJnotes('');
+    let editJobs = gridJobData;
+    editJobs = editJobs.map((item) => {
+      if (item === currentjob) {
+        item.companyName = cName.length > 0 ? cName : currentjob.companyName;
+        item.jobTitle = jTitle.length > 0 ? jTitle : currentjob.jobTitle;
+        item.description =
+          jDescription.length > 0 ? jDescription : currentjob.description;
+        item.appLink = aLink.length > 0 ? aLink : currentjob.appLink;
+        item.notes = jNotes.length > 0 ? jNotes : currentjob.notes;
+        setCName('');
+        setJTitle('');
+        setJDescription('');
+        setAlink('');
+        setJnotes('');
 
-    // 		return item;
-    // 	}
-    // });
+        return item;
+      }
+    });
     // console.log(currentjob);
     editData(currentjob, currentjob._id);
   };
@@ -698,7 +698,7 @@ function Homepage(props) {
                   <Box fontWeight='fontWeightRegular' m={1}>
                     <a href={job.appLink}>
                       Click here to open link{' '}
-                      <FontAwesomeIcon icon={faExternalLinkAlt} size='1px' />
+                      <FontAwesomeIcon icon={faExternalLinkAlt} size='1x' />
                     </a>
                   </Box>
                 </Typography>

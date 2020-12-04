@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory, withRouter } from 'react-router-dom';
 
 import logo from '../images/logo.png';
 
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header(props) {
-  const { setOpen } = props;
+  const history = useHistory();
   const classes = useStyles();
 
   return (
@@ -49,7 +50,7 @@ function Header(props) {
         <Toolbar>
           <IconButton
             onClick={() => {
-              setOpen('Home');
+              history.push('/app');
             }}
             color='default'
           >
@@ -78,7 +79,7 @@ function Header(props) {
           <div className={classes.sectionDesktop}>
             <Button
               onClick={() => {
-                setOpen('Help');
+                history.push('/help');
               }}
               color='default'
               startIcon={<HelpIcon />}
@@ -87,7 +88,7 @@ function Header(props) {
             </Button>
             <Button
               onClick={() => {
-                setOpen('AboutUs');
+                history.push('/about');
               }}
               color='default'
               startIcon={<InfoIcon />}
@@ -102,4 +103,4 @@ function Header(props) {
   );
 }
 
-export default Header;
+export default withRouter(Header);
