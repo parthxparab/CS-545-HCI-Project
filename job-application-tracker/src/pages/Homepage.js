@@ -27,8 +27,11 @@ import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import CancelIcon from '@material-ui/icons/Cancel';
+import Box from '@material-ui/core/Box';
 
 import moment from 'moment';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 const LightTooltip = withStyles((theme) => ({
   tooltip: {
@@ -54,11 +57,18 @@ function getModalStyle() {
   };
 }
 
+function Alert(props) {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     margin: '4px',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
   },
   media: {
     height: 0,
@@ -133,7 +143,9 @@ function Homepage(props) {
   const [jNotes, setJnotes] = React.useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openWarning, setOpenWarning] = React.useState(false);
-  const [currentDate, setCurrentDate] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [snackText, setSnackText] = React.useState('');
+  const [snackStatus, setSnackStatus] = React.useState('');
 
   useEffect(() => {
     console.log('render');
@@ -142,9 +154,6 @@ function Homepage(props) {
         axios.get('http://localhost:8000/api/job').then((response) => {
           setGridJobData(response.data);
         });
-
-        var date = moment().format(' MMM DD YYYY');
-        setCurrentDate(date);
       } catch (e) {
         console.log(e);
       }
@@ -161,6 +170,16 @@ function Homepage(props) {
     setOpen(false);
   };
 
+  const handleClickSnack = () => {
+    setOpenSnack(true);
+  };
+  const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
   const handleCloseTwo = () => {
     setAnchorEl(null);
   };
@@ -179,13 +198,16 @@ function Homepage(props) {
     );
     handleWarningClose();
     handleCloseTwo();
+    setSnackText('Job was Deleted Successfully!');
+    setSnackStatus('error');
+    handleClickSnack();
   };
 
   const updateStatus = async (job, status) => {
     console.log(job);
     let packet = {
       status: status,
-      timeStamp: 'Nov 21, 2020',
+      timeStamp: moment().format(' MMM DD YYYY'),
     };
     axios
       .patch('http://localhost:8000/api/job/status/' + String(job._id), packet)
@@ -203,11 +225,21 @@ function Homepage(props) {
   };
 
   const addInformation = (e) => {
-    if (cName !== '' || jTitle !== '' || jDescription !== '' || aLink !== '') {
-      updateJobCard();
-    } else {
-      alert('Please enter all details!');
-    }
+    // if (
+    //   cName.length > 0 &&
+    //   jTitle.length > 0 &&
+    //   jDescription.length > 0 &&
+    //   aLink.length > 0 &&
+    //   jNotes.length > 0
+    // ) {
+    updateJobCard();
+    // } else {
+    // console.log(cName, jTitle, jDescription, aLink, jNotes);
+    //   alert('Please enter all details!');
+    // }
+    setSnackText('Edit Changes were saved');
+    setSnackStatus('success');
+    handleClickSnack();
 
     handleClose();
 
@@ -216,7 +248,7 @@ function Homepage(props) {
   };
 
   const handleClick = (job) => (event) => {
-    console.log('handleClick called! job: ', job);
+    // console.log('handleClick called! job: ', job);
     setCurrentJob(job);
     setAnchorEl(event.currentTarget);
   };
@@ -231,7 +263,11 @@ function Homepage(props) {
             defaultValue={currentjob.companyName}
             multiline
             variant='outlined'
-            onChange={(e) => setCName(e.target.value)}
+            onChange={(e) =>
+              cName === ''
+                ? setCName(currentjob.companyName)
+                : setCName(e.target.value)
+            }
           />
         </div>
         <div>
@@ -241,7 +277,11 @@ function Homepage(props) {
             defaultValue={currentjob.jobTitle}
             multiline
             variant='outlined'
-            onChange={(e) => setJTitle(e.target.value)}
+            onChange={(e) =>
+              jTitle === ''
+                ? setJTitle(currentjob.jobTitle)
+                : setJTitle(e.target.value)
+            }
           />
         </div>
         <div>
@@ -251,7 +291,11 @@ function Homepage(props) {
             defaultValue={currentjob.description}
             multiline
             variant='outlined'
-            onChange={(e) => setJDescription(e.target.value)}
+            onChange={(e) =>
+              jDescription === ''
+                ? setJDescription(currentjob.description)
+                : setJDescription(e.target.value)
+            }
           />
         </div>
         <div>
@@ -261,7 +305,11 @@ function Homepage(props) {
             defaultValue={currentjob.appLink}
             multiline
             variant='outlined'
-            onChange={(e) => setAlink(e.target.value)}
+            onChange={(e) =>
+              aLink === ''
+                ? setAlink(currentjob.appLink)
+                : setAlink(e.target.value)
+            }
           />
         </div>
         <div>
@@ -271,7 +319,11 @@ function Homepage(props) {
             defaultValue={currentjob.notes}
             multiline
             variant='outlined'
-            onChange={(e) => setJnotes(e.target.value)}
+            onChange={(e) =>
+              jNotes === ''
+                ? setJnotes(currentjob.notes)
+                : setJnotes(e.target.value)
+            }
           />
         </div>
         <Button
@@ -300,6 +352,8 @@ function Homepage(props) {
   );
 
   async function editData(packet, id) {
+    packet['timeStamp'] = moment().format(' MMM DD YYYY');
+
     axios.patch(`http://localhost:8000/api/job/${id}`, packet).then(
       (response) => {
         console.log(response.data);
@@ -331,8 +385,8 @@ function Homepage(props) {
         setJnotes('');
         return item;
       }
+      return item;
     });
-
     editData(editJobs[0], editJobs[0]._id);
   };
 
@@ -610,7 +664,12 @@ function Homepage(props) {
                 </IconButton>
               </LightTooltip>
             </CardActions>
-            <div>{currentDate}</div>
+
+            <Typography variant='body2' component='p' align='center'>
+              <Box fontStyle='italic' m={1}>
+                Last updated: {job.timeStamp}
+              </Box>
+            </Typography>
 
             <Collapse in={activeIndex === job._id} timeout='auto' unmountOnExit>
               <CardContent>
@@ -656,6 +715,16 @@ function Homepage(props) {
           );
         })}
       </Grid>
+      <Snackbar
+        style={{ width: '100%', padding: 0, margin: 0 }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert onClose={handleCloseSnack} severity={snackStatus}>
+          {snackText}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

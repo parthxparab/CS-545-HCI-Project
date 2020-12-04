@@ -1,13 +1,13 @@
 /* eslint-disable no-throw-literal */
-const mongoCollections = require("./db/mongoCollections");
+const mongoCollections = require('./db/mongoCollections');
 const jobdb = mongoCollections.jobs;
-const ObjectId = require("mongodb").ObjectId;
+const ObjectId = require('mongodb').ObjectId;
 
 async function getJobById(id) {
-  if (!id) throw "You must provide an id to search for";
-  if (id.length <= 0) throw "Please provide proper length of the id";
-  if (typeof id === "undefined" || id == null || id == "")
-    throw "Please provide proper type of id";
+  if (!id) throw 'You must provide an id to search for';
+  if (id.length <= 0) throw 'Please provide proper length of the id';
+  if (typeof id === 'undefined' || id == null || id == '')
+    throw 'Please provide proper type of id';
 
   const jobCollection = await jobdb();
   const userData = await jobCollection.findOne({ _id: ObjectId(id) });
@@ -28,44 +28,43 @@ async function newJob(
   timeStamp,
   description,
   appLink,
-  // appLink = "www.google.com",
-  status = "NA",
-  notes = ""
+  status = 'NA',
+  notes = ''
 ) {
-  if (!companyName || companyName === "" || companyName === null)
-    throw "You must provide a Company Name for your entry";
-  if (typeof companyName !== "string" || typeof companyName == "undefined")
-    throw "Type of Company Name input must be String";
+  if (!companyName || companyName === '' || companyName === null)
+    throw 'You must provide a Company Name for your entry';
+  if (typeof companyName !== 'string' || typeof companyName == 'undefined')
+    throw 'Type of Company Name input must be String';
 
-  if (!jobTitle || jobTitle === "" || jobTitle === null)
-    throw "You must provide a Job Title for your entry";
-  if (typeof jobTitle !== "string" || typeof jobTitle == "undefined")
-    throw "Type of Job Title input must be String";
+  if (!jobTitle || jobTitle === '' || jobTitle === null)
+    throw 'You must provide a Job Title for your entry';
+  if (typeof jobTitle !== 'string' || typeof jobTitle == 'undefined')
+    throw 'Type of Job Title input must be String';
 
-  if (!description || description === "" || description === null)
-    throw "You must provide a description for your entry";
-  if (typeof description !== "string" || typeof description == "undefined")
-    throw "Type of description input must be String";
+  if (!description || description === '' || description === null)
+    throw 'You must provide a description for your entry';
+  if (typeof description !== 'string' || typeof description == 'undefined')
+    throw 'Type of description input must be String';
 
-  if (!appLink || appLink === "" || appLink === null)
-    throw "You must provide a application link for your entry";
-  if (typeof appLink !== "string" || typeof appLink == "undefined")
-    throw "Type of application link input must be String";
+  if (!appLink || appLink === '' || appLink === null)
+    throw 'You must provide a application link for your entry';
+  if (typeof appLink !== 'string' || typeof appLink == 'undefined')
+    throw 'Type of application link input must be String';
 
-  if (!timeStamp || timeStamp === "" || timeStamp === null)
-    throw "You must provide a timeStamp for your entry";
-  if (typeof timeStamp !== "string" || typeof timeStamp == "undefined")
-    throw "Type of timeStamp input must be String";
+  if (!timeStamp || timeStamp === '' || timeStamp === null)
+    throw 'You must provide a timeStamp for your entry';
+  if (typeof timeStamp !== 'string' || typeof timeStamp == 'undefined')
+    throw 'Type of timeStamp input must be String';
 
-  if (notes || notes !== "" || notes !== null) {
-    if (typeof notes !== "string" || typeof notes == "undefined")
-      throw "Type of notes input must be String";
+  if (notes || notes !== '' || notes !== null) {
+    if (typeof notes !== 'string' || typeof notes == 'undefined')
+      throw 'Type of notes input must be String';
   }
 
-  if (!status || status === "" || status === null)
-    throw "You must provide a status for your entry";
-  if (typeof status !== "string" || typeof status == "undefined")
-    throw "Type of status input must be String";
+  if (!status || status === '' || status === null)
+    throw 'You must provide a status for your entry';
+  if (typeof status !== 'string' || typeof status == 'undefined')
+    throw 'Type of status input must be String';
 
   const jobCollection = await jobdb();
 
@@ -93,20 +92,20 @@ async function patchUpdate(
   appLink,
   status,
   notes,
-  description
+  description,
+  timeStamp
 ) {
-  if (!id || typeof id !== "string" || id === undefined || id === null)
-    throw "You must provide an id to search for";
+  if (!id || typeof id !== 'string' || id === undefined || id === null)
+    throw 'You must provide an id to search for';
   else if (
     companyName === undefined &&
     jobTitle === undefined &&
     appLink === undefined &&
     status === undefined &&
     notes === undefined &&
-    appLink === undefined &&
     description === undefined
   )
-    throw "You must enter atleast one value";
+    throw 'You must enter atleast one value';
   else {
     const jobCollection = await jobdb();
     const old = await this.getJobById(id);
@@ -135,7 +134,7 @@ async function patchUpdate(
     updatedJobData = {
       companyName: companyName,
       jobTitle: jobTitle,
-      timeStamp: old.timeStamp,
+      timeStamp: timeStamp,
       description: description,
       appLink: appLink,
       status: status,
@@ -156,18 +155,18 @@ async function patchUpdate(
 async function changeJobStatus(id, status, timeStamp) {
   // Acceptable values from list - Applied, Assessment, Interview, Offer, Reject, Wishlist
 
-  if (!id || typeof id !== "string" || id === undefined || id === null)
-    throw "You must provide an id to search for";
+  if (!id || typeof id !== 'string' || id === undefined || id === null)
+    throw 'You must provide an id to search for';
 
-  if (!status || status === "" || status === null)
-    throw "You must provide a status for your entry";
-  if (typeof status !== "string" || typeof status == "undefined")
-    throw "Type of status input must be String";
+  if (!status || status === '' || status === null)
+    throw 'You must provide a status for your entry';
+  if (typeof status !== 'string' || typeof status == 'undefined')
+    throw 'Type of status input must be String';
 
-  if (!timeStamp || timeStamp === "" || timeStamp === null)
-    throw "You must provide a timeStamp for your entry";
-  if (typeof timeStamp !== "string" || typeof timeStamp == "undefined")
-    throw "Type of timeStamp input must be String";
+  if (!timeStamp || timeStamp === '' || timeStamp === null)
+    throw 'You must provide a timeStamp for your entry';
+  if (typeof timeStamp !== 'string' || typeof timeStamp == 'undefined')
+    throw 'Type of timeStamp input must be String';
 
   const jobCollection = await jobdb();
   const old = await this.getJobById(id);
@@ -177,9 +176,10 @@ async function changeJobStatus(id, status, timeStamp) {
     companyName: old.companyName,
     jobTitle: old.jobTitle,
     timeStamp: timeStamp,
+    description: old.description,
+    appLink: old.appLink,
     status: status,
     notes: old.notes,
-    appLink: old.appLink,
   };
 
   const newInsertInformation = await jobCollection.updateOne(
@@ -194,8 +194,8 @@ async function changeJobStatus(id, status, timeStamp) {
 }
 
 async function deleteJob(id) {
-  if (!id || typeof id !== "string" || id === undefined || id === null)
-    throw "You must provide an id to search for";
+  if (!id || typeof id !== 'string' || id === undefined || id === null)
+    throw 'You must provide an id to search for';
 
   const jobCollection = await jobdb();
   const removedJob = await this.getJobById(id);
