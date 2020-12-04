@@ -5,12 +5,13 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import BookmarksIcon from '@material-ui/icons/Bookmarks';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import IconButton from '@material-ui/core/IconButton';
 import StarsIcon from '@material-ui/icons/Stars';
-import AddIcon from '@material-ui/icons/Add';
 import NewReleasesIcon from '@material-ui/icons/NewReleases';
 import axios from 'axios';
 import Tooltip from '@material-ui/core/Tooltip';
+import moment from 'moment';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 // import JobCard from "./JobCard";
 const LightTooltip = withStyles((theme) => ({
@@ -37,11 +38,18 @@ function getModalStyle() {
 	};
 }
 
+function Alert(props) {
+	return <MuiAlert elevation={6} variant='filled' {...props} />;
+}
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		'& .MuiTextField-root': {
 			margin: theme.spacing(1),
 			width: 200,
+			'& > * + *': {
+				marginTop: theme.spacing(2),
+			},
 		},
 	},
 	paper: {
@@ -73,6 +81,7 @@ export default function AppliedComponent(props) {
 	const [modalStyle] = React.useState(getModalStyle);
 	const [appLink, setAppLink] = React.useState('');
 	const [notes, setNotes] = React.useState('');
+	const [openSnack, setOpenSnack] = React.useState(false);
 
 	const _checkInformationValid = () => {
 		if (companyName !== '' && jobTitle !== '') {
@@ -88,6 +97,7 @@ export default function AppliedComponent(props) {
 				axios.get('http://localhost:8000/api/job').then((response) => {
 					getData(response.data);
 				});
+				handleClickSnack();
 			},
 			(error) => {
 				console.log(error);
@@ -100,7 +110,7 @@ export default function AppliedComponent(props) {
 				companyName: companyName,
 				jobTitle: jobTitle,
 				description: jobDescription !== '' ? jobDescription : ' ',
-				timeStamp: 'Nov 21, 2020',
+				timeStamp: moment().format(' MMM DD YYYY'),
 				notes: notes !== '' ? notes : ' ',
 				appLink: appLink !== '' ? appLink : ' ',
 				status: props.status,
@@ -124,6 +134,17 @@ export default function AppliedComponent(props) {
 	};
 	const handleOpen = () => {
 		setOpen(true);
+	};
+
+	const handleClickSnack = () => {
+		setOpenSnack(true);
+	};
+	const handleCloseSnack = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setOpenSnack(false);
 	};
 
 	const handleClose = () => {
@@ -226,15 +247,6 @@ export default function AppliedComponent(props) {
 					{props.status} {getIcon}{' '}
 				</h1>
 				<LightTooltip title='Add new job'>
-					{/* <Button
-            className={classes.button}
-            variant="contained"
-            size="medium"
-            type="button"
-            onClick={handleOpen}
-          >
-            +
-          </Button> */}
 					<IconButton
 						onClick={handleOpen}
 						className={classes.button}
@@ -244,7 +256,6 @@ export default function AppliedComponent(props) {
 						<AddIcon />
 					</IconButton>
 				</LightTooltip>
-
 				<Modal
 					open={open}
 					onClose={handleClose}
@@ -255,7 +266,16 @@ export default function AppliedComponent(props) {
 					{body}
 				</Modal>
 			</div>
-			{/* <JobCard items={todo} gridColor={handleColor()} setItems={setTodo} /> */}
+			<Snackbar
+				style={{ width: '100%', padding: 0, margin: 0 }}
+				open={openSnack}
+				autoHideDuration={2500}
+				onClose={handleCloseSnack}
+			>
+				<Alert onClose={handleCloseSnack} severity='success'>
+					New Job Card Added Successfully!
+				</Alert>
+			</Snackbar>{' '}
 		</div>
 	);
 }
