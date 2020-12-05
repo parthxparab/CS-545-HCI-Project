@@ -9,7 +9,7 @@ Manas Kulkarni
 Varsha Raghavendra
 
 <br>
-to Run the app -
-`npm i`
-`node server.js`
-`npm start`
+to Run the app - <br>
+npm i<br>
+node server.js<br>
+npm start<br>
