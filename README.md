@@ -7,3 +7,9 @@ Sanket Patidar
 Parth Parab
 Manas Kulkarni
 Varsha Raghavendra
+
+<br>
+to Run the app -
+`npm i`
+`node server.js`
+`npm start`
