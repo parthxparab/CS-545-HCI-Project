@@ -5,22 +5,13 @@ import HelpIcon from '@material-ui/icons/Help';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
-import Icon from '@material-ui/core/Icon';
-import JistIcon from './jist.jpeg';
-// import { ReactComponent as JistIcon } from './jist.jpeg';
-// import SvgIcon from '@material-ui/core/SvgIcon';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory, withRouter } from 'react-router-dom';
+
+import logo from '../images/logo.png';
 
 const useStyles = makeStyles((theme) => ({
-	mySvgStyle: {
-		fillColor: theme.palette.primary.main,
-	},
-	imageIcon: {
-		height: '100%',
-	},
-	iconRoot: {
-		textAlign: 'center',
-	},
 	grow: {
 		flexGrow: 1,
 	},
@@ -50,26 +41,28 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Header(props) {
-	const { setOpen } = props;
+	const history = useHistory();
 	const classes = useStyles();
 
 	return (
 		<div>
 			<AppBar className={classes.bar}>
 				<Toolbar>
-					<Button
+					<IconButton
 						onClick={() => {
-							setOpen('Home');
+							history.push('/app');
 						}}
 						color='default'
 					>
-						<Icon classes={{ root: classes.iconRoot }}>
-							<img className={classes.imageIcon} src={JistIcon} />
-						</Icon>
-						{/* <SvgIcon className={classes.mySvgStyle}>
-							<JistIcon />
-						</SvgIcon> */}
-						<Box
+						{' '}
+						<img
+							src={logo}
+							className='App-logo'
+							alt='logo'
+							height='40'
+							width='80'
+						/>
+						{/* <Box
 							fontWeight='fontWeightBold'
 							fontSize='h5.fontSize'
 							textAlign='left'
@@ -77,14 +70,16 @@ function Header(props) {
 							m={1}
 						>
 							TRACE
-						</Box>
-					</Button>
-
+						</Box> */}
+					</IconButton>
+					<Box fontFamily='Raleway' m={1} color='black'>
+						The Job Application Tracker
+					</Box>
 					<div className={classes.grow} />
 					<div className={classes.sectionDesktop}>
 						<Button
 							onClick={() => {
-								setOpen('Help');
+								history.push('/help');
 							}}
 							color='default'
 							startIcon={<HelpIcon />}
@@ -93,7 +88,7 @@ function Header(props) {
 						</Button>
 						<Button
 							onClick={() => {
-								setOpen('AboutUs');
+								history.push('/about');
 							}}
 							color='default'
 							startIcon={<InfoIcon />}
@@ -108,4 +103,4 @@ function Header(props) {
 	);
 }
 
-export default Header;
+export default withRouter(Header);

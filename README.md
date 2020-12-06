@@ -6,4 +6,10 @@ Prateek Jani
 Sanket Patidar
 Parth Parab
 Manas Kulkarni
-Varsha Rao
+Varsha Raghavendra
+
+<br>
+to Run the app - <br>
+npm i<br>
+node server.js<br>
+npm start<br>

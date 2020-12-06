@@ -66,6 +66,15 @@ async function newJob(
   if (typeof status !== 'string' || typeof status == 'undefined')
     throw 'Type of status input must be String';
 
+  var prefix = 'http://';
+  var prefix2 = 'https://';
+  if (
+    appLink.substr(0, prefix.length) !== prefix &&
+    appLink.substr(0, prefix2.length) !== prefix2
+  ) {
+    appLink = prefix + appLink;
+  }
+
   const jobCollection = await jobdb();
 
   const newJob = {
@@ -128,6 +137,15 @@ async function patchUpdate(
 
     if (description === undefined) {
       description = old.description;
+    }
+
+    var prefix = 'http://';
+    var prefix2 = 'https://';
+    if (
+      appLink.substr(0, prefix.length) !== prefix &&
+      appLink.substr(0, prefix2.length) !== prefix2
+    ) {
+      appLink = prefix + appLink;
     }
     let updatedJobData;
 
