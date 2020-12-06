@@ -5,9 +5,22 @@ import HelpIcon from '@material-ui/icons/Help';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Icon from '@material-ui/core/Icon';
+import JistIcon from './jist.jpeg';
+// import { ReactComponent as JistIcon } from './jist.jpeg';
+// import SvgIcon from '@material-ui/core/SvgIcon';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+	mySvgStyle: {
+		fillColor: theme.palette.primary.main,
+	},
+	imageIcon: {
+		height: '100%',
+	},
+	iconRoot: {
+		textAlign: 'center',
+	},
 	grow: {
 		flexGrow: 1,
 	},
@@ -50,6 +63,12 @@ function Header(props) {
 						}}
 						color='default'
 					>
+						<Icon classes={{ root: classes.iconRoot }}>
+							<img className={classes.imageIcon} src={JistIcon} />
+						</Icon>
+						{/* <SvgIcon className={classes.mySvgStyle}>
+							<JistIcon />
+						</SvgIcon> */}
 						<Box
 							fontWeight='fontWeightBold'
 							fontSize='h5.fontSize'
