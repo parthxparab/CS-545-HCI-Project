@@ -24,3 +24,5 @@ npm start
 
 [Link to Project PPT](https://github.com/parthxparab/CS-545-Project/blob/master/Job%20Tracker%20Application.pptx)<br>
 [Link to Project Video](https://youtu.be/Aers2uUb62A)
+
+**FINAL GRADE: A**
