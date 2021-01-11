@@ -1,6 +1,7 @@
-# CS-545-Project
+# CS-545-HCI-Project - Job Application Tracker
 
-Job Application Tracker - CS 545 Human Computer Interaction Final Project <br>
+CS 545 Human Computer Interaction taught by Professor Gregg Vesonder at Stevens Institute of Technology for Fall 2020
+
 Members -
 Prateek Jani 
 Sanket Patidar
@@ -9,7 +10,7 @@ Manas Kulkarni
 Varsha Raghavendra
 
 <br>
-to Run the app - <br>
+Steps to Run the Project - 
 
 ```
 npm i
