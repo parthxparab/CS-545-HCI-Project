@@ -609,9 +609,9 @@ function Homepage(props) {
                     </MenuItem>
                     <MenuItem
                       onClick={handleWarningOpen}
-                      // onClick={() => {
-                      // 	deleteJob(currentjob);
-                      // }}
+                    // onClick={() => {
+                    // 	deleteJob(currentjob);
+                    // }}
                     >
                       <DeleteIcon
                         fontSize='small'
